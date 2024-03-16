@@ -8,8 +8,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
+import androidx.navigation.compose.rememberNavController
+import com.example.splitapp.login.LoginComposable
 import com.example.splitapp.ui.theme.SplitAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -17,17 +27,38 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             SplitAppTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
+                val navController = rememberNavController()
+                NavHost(navController = navController, startDestination = "auth" ){
+                    navigation(
+                        startDestination = "login",
+                        route  = "auth"
+                    ){
+                        composable("register"){
+
+                        }
+                        composable("login"){
+                            LoginComposable(navController = navController)
+                        }
+                        composable("forgetPassword"){
+
+                        }
+                    }
                 }
             }
         }
     }
 }
+
+
+@Composable
+inline fun <reified T: ViewModel> NavBackStackEntry.sharedViewModel(navController: NavController): T {
+   val navGraphRout = destination.parent?.route?: return viewModel()
+   val parentEntry = remember(this) {
+       navController.getBackStackEntry(navGraphRout)
+   }
+    return viewModel(parentEntry)
+}
+
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
