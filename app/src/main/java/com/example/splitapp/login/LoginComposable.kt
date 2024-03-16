@@ -57,7 +57,7 @@ fun LoginComposable(navController: NavController?) {
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceAround,
+        verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxSize()
             .padding(30.dp)
@@ -83,6 +83,7 @@ fun LoginComposable(navController: NavController?) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.height(50.dp))
             CustomInput(passedValue = username, onchange = {value -> username = value} , R.drawable.user)
             Spacer(modifier = Modifier.height(10.dp))
             CustomInput(passedValue = password, onchange = {value -> password = value} , R.drawable.oval)
@@ -136,7 +137,7 @@ fun CustomInput(passedValue : String , onchange : (String) -> Unit, svgId :Int){
                 singleLine = true,
                 textStyle = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.Normal),
                 modifier = Modifier
-                    .padding(10.dp)
+                    .padding(horizontal = 10.dp)
                     .fillMaxWidth()
                     .height(30.dp)
 

@@ -8,6 +8,7 @@ import com.example.splitapp.ui.theme.white32
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -26,53 +27,83 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
+import com.example.splitapp.ui.theme.blue32
 
 
 @Composable
 fun GroupComposable() {
     val testGroup: Map<Color, Float> = mapOf(
-        green32 to 1.5f,
-        orange32 to 2.0f,
-        white32 to 3.0f
+        green32 to 150.5f,
+        orange32 to 20.0f,
+        white32 to 113.0f,
+        Color.Black to 55.0f,
+        Color.Blue to 5.0f
     )
     Column (
-        modifier = Modifier.padding(20.dp)
+        modifier = Modifier
+            .padding(20.dp)
     ) {
         Text(text = "Groups",
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
-            fontStyle = FontStyle.Italic
+            fontStyle = FontStyle.Italic,
+            color = blue32
         )
         Spacer(modifier = Modifier.height(10.dp))
         LazyColumn {
             items(testGroup.size) { index ->
                 val entry = testGroup.entries.elementAt(index)
                 val (color, value) = entry
+                val values = "$$value"
                 Surface (
-                    shape = RoundedCornerShape(10.dp),
-                    border = BorderStroke(2.dp, green32),
+                    shape = RoundedCornerShape(20.dp),
+                    border = BorderStroke(1.dp, Color.Black),
                     modifier = Modifier.padding(vertical = 5.dp , horizontal = 0.dp)
                 ){
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(60.dp)
+                        .height(100.dp)
                         .padding(horizontal = 10.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Surface(
-                        shape = RoundedCornerShape(8.dp),
-                        border = BorderStroke(1.dp, Color.Black),
-                        modifier = Modifier.size(50.dp),
-                        color = color
-                    ) {
 
+                    ) {
+                        Row {
+
+
+                            Surface(
+                                shape = RoundedCornerShape(8.dp),
+                                border = BorderStroke(1.dp, Color.Black),
+                                modifier = Modifier.size(50.dp),
+                                color = color
+                            ) {
+
+                            }
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Column {
+                                Text(
+                                    text = "Vatmara",
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = blue32
+                                )
+                                Text(
+                                    text = "Owner",
+                                    fontWeight = FontWeight.Medium,
+                                    fontStyle = FontStyle.Italic,
+                                    color = orange32)
+                            }
+                        }
                     }
                     Text(
-                        text = value.toString(),
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.SemiBold
+                        text = values,
+                        fontSize = 25.sp,
+                        color = blue32,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(horizontal = 10.dp)
                     )
 
                 }

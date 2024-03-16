@@ -1,5 +1,6 @@
 package com.example.splitapp.overView
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -9,6 +10,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -22,30 +26,34 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.splitapp.R
 import com.example.splitapp.ui.theme.green32
+import com.example.splitapp.ui.theme.orange32
 import com.example.splitapp.ui.theme.white32
+import com.example.splitapp.ui.theme.white33
 
 
 @Composable
-fun buttomComposable(){
+fun BarComposable(){
     Surface {
         Box(
-            modifier = Modifier.height(100.dp)
+            modifier = Modifier
+                .height(80.dp)
+                .background(white33)
         ){
             Surface(
 
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.bnav),
+                    painter = painterResource(id = R.drawable.bar),
                     contentDescription = "navBar",
                     tint = Color.Unspecified,
-                    modifier = Modifier.size(1000.dp)
+                    modifier = Modifier.size(500.dp)
                 )
             }
             Row (
                 modifier = Modifier
                     .fillMaxHeight()
                     .fillMaxWidth()
-                    .padding(horizontal = 50.dp),
+                    .padding(horizontal = 30.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ){
@@ -64,10 +72,33 @@ fun buttomComposable(){
         }
     }
 }
-
+@Composable
+fun BComposable(){
+    Box (
+        contentAlignment = Alignment.Center
+    ) {
+        BarComposable()
+        FloatComposable()
+    }
+}
+@Composable
+fun FloatComposable() {
+    FloatingActionButton(
+        modifier = Modifier
+            .size(70.dp),
+        onClick = { /*TODO*/ },
+        elevation = FloatingActionButtonDefaults.elevation(5.dp, 5.dp, 5.dp, 5.dp),
+        shape = CircleShape,
+        containerColor = white33
+    ) {
+       Icon(painter = painterResource(id = R.drawable.plus), contentDescription = "add",
+           modifier = Modifier.size(25.dp),
+           tint = orange32     )
+    }
+}
 
 @Preview(name = "buttom")
 @Composable
 fun preview2(){
-    buttomComposable()
+    BComposable()
 }

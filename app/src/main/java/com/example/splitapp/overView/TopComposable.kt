@@ -39,7 +39,7 @@ fun topComposable(){
                 tint = orange32,
                 contentDescription = "setting",
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(34.dp)
 
             )
         }
@@ -48,7 +48,7 @@ fun topComposable(){
                 painter = painterResource(id = R.drawable.user),
                 contentDescription = "user profile" ,
                 modifier = Modifier
-                    .size(36.dp))
+                    .size(30.dp))
         }
     }
 }
