@@ -31,6 +31,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -41,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.splitapp.R
+import com.example.splitapp.ui.theme.green32
 
 @Composable
 fun LoginComposable(navController: NavController?) {
@@ -85,7 +88,9 @@ fun LoginComposable(navController: NavController?) {
             CustomInput(passedValue = password, onchange = {value -> password = value} , R.drawable.oval)
             Spacer(modifier = Modifier.height(10.dp))
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                          navController?.navigate("userView")
+                },
             ) {
                 Text(text = "Sign In")
             }
@@ -104,9 +109,15 @@ fun LoginComposable(navController: NavController?) {
 @Composable
 fun CustomInput(passedValue : String , onchange : (String) -> Unit, svgId :Int){
     var currValue = passedValue
+    var isFocused by remember {
+        mutableStateOf(false)
+    }
+    val borderColor = if (isFocused) green32 else Color.Black
     Surface(
         shape = RoundedCornerShape(15.dp),
-        border = BorderStroke(2.dp, Color.Black),
+        border = BorderStroke(2.dp, borderColor),
+        modifier = Modifier
+            .onFocusChanged { isFocused = it.isFocused }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -127,7 +138,8 @@ fun CustomInput(passedValue : String , onchange : (String) -> Unit, svgId :Int){
                 modifier = Modifier
                     .padding(10.dp)
                     .fillMaxWidth()
-                    .height(26.dp)
+                    .height(30.dp)
+
             )
         }
     }

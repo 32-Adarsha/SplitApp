@@ -20,6 +20,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.splitapp.login.LoginComposable
+import com.example.splitapp.overView.overView
 import com.example.splitapp.ui.theme.SplitAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -41,6 +42,15 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("forgetPassword"){
 
+                        }
+                    }
+
+                    navigation(
+                        startDestination = "overView",
+                        route = "userView"
+                    ){
+                        composable("overView"){
+                                overView(navController = navController)
                         }
                     }
                 }
