@@ -1,18 +1,23 @@
 package com.example.splitapp.Group
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 
+
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -41,6 +46,7 @@ import com.example.splitapp.overView.BComposable
 import com.example.splitapp.ui.theme.blue32
 import com.example.splitapp.ui.theme.green32
 import com.example.splitapp.ui.theme.orange32
+import com.example.splitapp.ui.theme.white33
 
 
 val friend:Map<String , Float> = mapOf(
@@ -74,9 +80,19 @@ fun GroupOverViewComposable (navController: NavController? ,groupTitle:String) {
                 color = blue32,
                 modifier = Modifier.padding(horizontal = 20.dp)
             )
-            LogViewComposable()
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .background(Color.Transparent),
+                ) {
+                LogViewComposable()
+            }
+            BComposable()
         }
-        BComposable()
+
+
+
+
 
     }
 
@@ -108,7 +124,32 @@ fun GroupTopComposable(name:String){
 
 @Composable
 fun GroupMidTopComposable(friend:Map<String,Float>){
-    LazyRow(){
+    LazyRow(
+        modifier = Modifier.padding(horizontal = 5.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ){
+        item {
+            Column (
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(horizontal = 10.dp)
+            ) {
+                Surface (
+                    border = BorderStroke(1.dp, Color.Black),
+                    modifier = Modifier
+                        .size(70.dp),
+                    color = white33,
+                    shape = CircleShape
+                ) {
+                    Icon(painter = painterResource(id = R.drawable.plus), contentDescription = "Add",
+                        modifier = Modifier.padding(20.dp), tint = blue32)
+                }
+                Spacer(modifier = Modifier.height(15.dp))
+                Text(text = "Add" , fontSize =  20.sp , fontWeight = FontWeight.Bold , color = orange32)
+
+
+            }
+        }
         items(friend.size){index ->
             val entry = friend.entries.elementAt(index)
             friendViewComposable(name = entry.key, owes = entry.value)
@@ -122,16 +163,17 @@ fun friendViewComposable(name:String , owes:Float){
     Column (
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(horizontal = 5.dp)
+        modifier = Modifier.padding(horizontal = 10.dp)
     ) {
         Surface (
-            modifier = Modifier.size(80.dp),
-            color = orange32,
+            border = BorderStroke(1.dp, Color.Black),
+            modifier = Modifier.size(70.dp),
+            color = white33,
             shape = CircleShape
         ) {
 
         }
-
+        Spacer(modifier = Modifier.height(2.dp))
         Text(text = name, fontSize =  20.sp , fontWeight = FontWeight.Bold , color = blue32)
         Text(text = "$${owes.toString()}" , fontSize =  15.sp , fontWeight = FontWeight.Bold , color = green32)
     }

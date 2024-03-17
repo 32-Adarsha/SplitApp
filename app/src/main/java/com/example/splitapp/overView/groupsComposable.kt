@@ -65,7 +65,7 @@ fun GroupComposable(navController: NavController?) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(100.dp)
+                        .height(70.dp)
                         .padding(horizontal = 10.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween

@@ -32,13 +32,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.splitapp.ui.theme.blue32
 import com.example.splitapp.ui.theme.orange32
+import com.example.splitapp.ui.theme.white33
 
 
 @Composable
 fun LogViewComposable(){
     Surface (
-        shape = RoundedCornerShape(20.dp),
-        border = BorderStroke(1.dp, Color.Black),
+
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 5.dp)
@@ -67,7 +67,7 @@ fun LogCardComposable(){
                 .padding(horizontal = 10.dp , vertical = 10.dp)
                 .animateContentSize(
                     animationSpec = tween(
-                        delayMillis = 500,
+                        delayMillis = 300,
                         easing = LinearOutSlowInEasing
                     )
                 )
@@ -80,7 +80,7 @@ fun LogCardComposable(){
                     shape = RoundedCornerShape(8.dp),
                     border = BorderStroke(1.dp, Color.Black),
                     modifier = Modifier.size(50.dp),
-                    color = Color.Green,
+                    color = white33,
                     onClick = { expanded = !expanded }
                 ) {
 
