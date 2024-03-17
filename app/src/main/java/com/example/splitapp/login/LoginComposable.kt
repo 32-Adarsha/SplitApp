@@ -146,9 +146,9 @@ fun CustomInput(passedValue : String , onchange : (String) -> Unit, svgId :Int){
     }
 }
 
-@Preview
-@Composable
-fun PreviewLogin(){
-
-    LoginComposable(null)
-}
+//@Preview
+//@Composable
+//fun PreviewLogin(){
+//
+//    LoginComposable(null)
+//}

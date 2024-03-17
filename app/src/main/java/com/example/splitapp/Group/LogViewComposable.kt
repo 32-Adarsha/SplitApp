@@ -125,13 +125,13 @@ fun LogCardComposable(){
 
 
 
-@Composable
-@Preview
-fun PreviewLogViewComposable(){
-    //LogViewComposable()
-}
-@Preview
-@Composable
-fun PreviewLogCardComposable(){
-    LogCardComposable()
-}
+//@Composable
+//@Preview
+//fun PreviewLogViewComposable(){
+//    //LogViewComposable()
+//}
+//@Preview
+//@Composable
+//fun PreviewLogCardComposable(){
+//    LogCardComposable()
+//}
