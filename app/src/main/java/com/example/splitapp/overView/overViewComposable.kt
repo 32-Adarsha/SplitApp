@@ -38,7 +38,6 @@ fun overView(navController: NavController?){
             .padding(vertical = 20.dp)
             .background(white33),
 
-
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -48,7 +47,7 @@ fun overView(navController: NavController?){
             topComposable()
             Spacer(modifier = Modifier.height(20.dp))
             moneyComposable()
-            GroupComposable()
+            GroupComposable(navController = navController)
 
         }
         Box(

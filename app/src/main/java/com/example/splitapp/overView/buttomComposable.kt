@@ -32,6 +32,15 @@ import com.example.splitapp.ui.theme.white33
 
 
 @Composable
+fun BComposable(){
+    Box (
+        contentAlignment = Alignment.Center
+    ) {
+        BarComposable()
+        FloatComposable()
+    }
+}
+@Composable
 fun BarComposable(){
     Surface {
         Box(
@@ -72,15 +81,7 @@ fun BarComposable(){
         }
     }
 }
-@Composable
-fun BComposable(){
-    Box (
-        contentAlignment = Alignment.Center
-    ) {
-        BarComposable()
-        FloatComposable()
-    }
-}
+
 @Composable
 fun FloatComposable() {
     FloatingActionButton(

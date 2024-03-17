@@ -27,11 +27,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.splitapp.ui.theme.blue32
 
 
 @Composable
-fun GroupComposable() {
+fun GroupComposable(navController: NavController?) {
     val testGroup: Map<Color, Float> = mapOf(
         green32 to 150.5f,
         orange32 to 20.0f,
@@ -58,7 +59,8 @@ fun GroupComposable() {
                 Surface (
                     shape = RoundedCornerShape(20.dp),
                     border = BorderStroke(1.dp, Color.Black),
-                    modifier = Modifier.padding(vertical = 5.dp , horizontal = 0.dp)
+                    modifier = Modifier.padding(vertical = 5.dp , horizontal = 0.dp),
+                    onClick = {navController?.navigate("groupView")}
                 ){
                 Row(
                     modifier = Modifier
@@ -119,5 +121,5 @@ fun GroupComposable() {
 @Preview
 @Composable
 fun previewGroupComposable(){
-    GroupComposable()
+    GroupComposable(null)
 }
