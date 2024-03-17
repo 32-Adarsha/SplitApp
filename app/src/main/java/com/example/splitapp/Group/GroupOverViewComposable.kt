@@ -87,7 +87,7 @@ fun GroupOverViewComposable (navController: NavController? ,groupTitle:String) {
                 ) {
                 LogViewComposable()
             }
-            BComposable()
+            BComposable(navController = navController)
         }
 
 

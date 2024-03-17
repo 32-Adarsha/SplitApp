@@ -20,6 +20,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.splitapp.Group.GroupOverViewComposable
+import com.example.splitapp.createGroup.createGroupComposable
 import com.example.splitapp.login.LoginComposable
 import com.example.splitapp.overView.overView
 import com.example.splitapp.ui.theme.SplitAppTheme
@@ -53,8 +54,17 @@ class MainActivity : ComponentActivity() {
                         composable("overView"){
                                 overView(navController = navController)
                         }
-                        composable("groupView"){
-                                GroupOverViewComposable(navController = navController , "Vatmara")
+                        composable("createGroup"){
+                                createGroupComposable()
+                        }
+
+                    }
+                    navigation (
+                        startDestination = "group",
+                        route = "groupView"
+                    ){
+                        composable("group"){
+                            GroupOverViewComposable(navController = navController , "Vatmara")
                         }
                     }
                 }

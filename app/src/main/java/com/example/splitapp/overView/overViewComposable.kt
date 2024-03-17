@@ -58,7 +58,7 @@ fun overView(navController: NavController?){
             contentAlignment = Alignment.Center,
 
         ) {
-                BComposable()
+                BComposable(navController = navController)
         }
     }
 
