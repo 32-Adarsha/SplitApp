@@ -3,6 +3,7 @@ package com.example.splitapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -22,11 +23,14 @@ import androidx.navigation.compose.rememberNavController
 import com.example.splitapp.Group.GroupOverViewComposable
 import com.example.splitapp.Transaction.mainTransactionComposable
 import com.example.splitapp.createGroup.CreateGroupComposable
+import com.example.splitapp.data.dataViewModel
 import com.example.splitapp.login.LoginComposable
 import com.example.splitapp.overView.overView
 import com.example.splitapp.ui.theme.SplitAppTheme
 
 class MainActivity : ComponentActivity() {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
