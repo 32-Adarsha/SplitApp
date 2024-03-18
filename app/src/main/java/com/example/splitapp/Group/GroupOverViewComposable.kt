@@ -87,7 +87,7 @@ fun GroupOverViewComposable (navController: NavController? ,groupTitle:String) {
                 ) {
                 LogViewComposable()
             }
-            BComposable(navController = navController)
+            BComposable(navController = navController , navRoute = "makeTransaction")
         }
 
 
@@ -189,22 +189,22 @@ fun friendViewComposable(name:String , owes:Float){
 
 
 
-//@Preview(name = "Friend")
-//@Composable
-//fun PreviewfriendView(){
-//    friendViewComposable(name = "Adarsha", owes = 5.0f)
-//}
-//
-//@Preview(name = "MidComposable")
-//@Composable
-//fun PreviewGroupMidComposable(){
-//
-//    GroupMidTopComposable( friend)
-//}
-//
-//
-//@Preview
-//@Composable
-//fun previewGroupOverViewComposable (){
-//    GroupOverViewComposable(null,"Vatmara")
-//}
+@Preview(name = "Friend")
+@Composable
+fun PreviewfriendView(){
+    friendViewComposable(name = "Adarsha", owes = 5.0f)
+}
+
+@Preview(name = "MidComposable")
+@Composable
+fun PreviewGroupMidComposable(){
+
+    GroupMidTopComposable( friend)
+}
+
+
+@Preview
+@Composable
+fun previewGroupOverViewComposable (){
+    GroupOverViewComposable(null,"Vatmara")
+}

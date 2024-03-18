@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,11 +36,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.splitapp.R
+import com.example.splitapp.createGroup.AddFriendComposable
 import com.example.splitapp.createGroup.CustomInputforThis
 import com.example.splitapp.createGroup.Label
 import com.example.splitapp.createGroup.SelectTopComposable
 import com.example.splitapp.ui.theme.blue32
 import com.example.splitapp.ui.theme.green32
+import com.example.splitapp.ui.theme.orange32
 import selectedFriend2
 
 
@@ -48,34 +51,48 @@ enum class Transaction {
     DivideExpense
 }
 @Composable
-fun mainTransactionComposable(){
-    var typeTransaction : Transaction? by remember {
+fun mainTransactionComposable() {
+    var typeTransaction: Transaction? by remember {
         mutableStateOf(null)
+    }
+
+    var isSlectingFriend:Boolean by remember {
+        mutableStateOf(false)
     }
     var amount by remember {
         mutableStateOf(0f)
     }
 
-    var isSettle = if(typeTransaction == Transaction.SettleUp) true else false
-    var isDivide = if(typeTransaction == Transaction.DivideExpense) true else false
-    Column (modifier = Modifier
-        .fillMaxSize()
-        .padding(10.dp)
+    var isSettle = if (typeTransaction == Transaction.SettleUp) true else false
+    var isDivide = if (typeTransaction == Transaction.DivideExpense) true else false
+
+    Box(
+
+    ) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp)
     ) {
         SelectTopComposable()
         Spacer(modifier = Modifier.height(10.dp))
-        Row (
+        Row(
             horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()){
+            modifier = Modifier.fillMaxWidth()
+        ) {
 
-            Surface (
+            Surface(
                 shape = RoundedCornerShape(12.dp),
                 border = BorderStroke(1.dp, blue32),
+                onClick = {
+                    typeTransaction = Transaction.SettleUp
+                },
+                shadowElevation = if(isSettle) 5.dp else 0.dp,
                 modifier = Modifier
                     .weight(1f)
                     .height(50.dp)
             ) {
-                TransactionOption(optName = "Settle", selected = isSettle , Weight = FontWeight.Bold)
+                TransactionOption(optName = "Settle", selected = isSettle, Weight = FontWeight.Bold)
             }
 
             Spacer(modifier = Modifier.width(10.dp))
@@ -84,51 +101,93 @@ fun mainTransactionComposable(){
             Surface(
                 shape = RoundedCornerShape(12.dp),
                 border = BorderStroke(1.dp, blue32),
+                onClick = {
+                          typeTransaction = Transaction.DivideExpense
+                },
+                shadowElevation = if(isDivide) 10.dp else 0.dp,
                 modifier = Modifier
                     .weight(1f)
                     .height(50.dp)
             ) {
-                TransactionOption(optName = "Divide", selected = true , Weight = FontWeight.Bold)
+                TransactionOption(optName = "Divide", selected = isDivide, Weight = FontWeight.Bold)
             }
         }
         Spacer(modifier = Modifier.height(40.dp))
-        TransactionAmount(amount = amount.toString() , {it -> amount = it.toFloat()})
+        TransactionAmount(amount = amount.toString(), { it -> amount = it.toFloat() })
         Spacer(modifier = Modifier.height(10.dp))
 
 
-        Button(onClick = { /*TODO*/ },
-            modifier = Modifier.fillMaxWidth()) {
-            Row (
+        Button(
+            onClick = {
+                      isSlectingFriend = !isSlectingFriend
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(40.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
-            ){
-                Text(text = "Friend List" , fontWeight = FontWeight.Bold , fontSize = 20.sp)
-                Icon(painter = painterResource(id = R.drawable.plus), contentDescription = "add" )
+            ) {
+                Text(text = "Friend List", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                Icon(painter = painterResource(id = R.drawable.plus), contentDescription = "add")
             }
         }
 
         Spacer(modifier = Modifier.height(10.dp))
-        Surface (
+        Surface(
             modifier = Modifier.weight(1f)
         ) {
             selectedFriend2()
         }
 
         Spacer(modifier = Modifier.height(10.dp))
-        Button(onClick = { /*TODO*/ },
+        Button(
+            onClick = { /*TODO*/ },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp)) {
-            Text(text = "Post Transaction" , fontWeight = FontWeight.Bold , fontSize = 20.sp)
+                .height(50.dp)
+        ) {
+            Text(text = "Post Transaction", fontWeight = FontWeight.Bold, fontSize = 20.sp)
 
 
         }
 
 
     }
+
+        if (isSlectingFriend){
+                Column (
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Surface (
+                        modifier = Modifier
+                            .size(600.dp)
+                            .padding(30.dp)
+                    ) {
+                        Column (
+                            modifier = Modifier.fillMaxSize()
+                        ){
+                            Surface (
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                AddFriendComposable()
+                            }
+
+                            Button(onClick = { isSlectingFriend = !isSlectingFriend },
+                                modifier = Modifier.fillMaxWidth()) {
+                                Text(text = "Add")
+                            }
+                        }
+
+
+                    }
+
+            }}
+
+}
 
 
 }

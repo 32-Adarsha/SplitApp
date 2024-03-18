@@ -20,6 +20,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.splitapp.Group.GroupOverViewComposable
+import com.example.splitapp.Transaction.mainTransactionComposable
 import com.example.splitapp.createGroup.CreateGroupComposable
 import com.example.splitapp.login.LoginComposable
 import com.example.splitapp.overView.overView
@@ -65,6 +66,9 @@ class MainActivity : ComponentActivity() {
                     ){
                         composable("group"){
                             GroupOverViewComposable(navController = navController , "Vatmara")
+                        }
+                        composable("makeTransaction"){
+                            mainTransactionComposable()
                         }
                     }
                 }

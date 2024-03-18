@@ -32,12 +32,12 @@ import com.example.splitapp.ui.theme.white33
 
 
 @Composable
-fun BComposable(navController: NavController?){
+fun BComposable(navController: NavController? , navRoute : String){
     Box (
         contentAlignment = Alignment.Center
     ) {
         BarComposable()
-        FloatComposable(navController = navController)
+        FloatComposable(navController = navController , navRoute = navRoute)
     }
 }
 @Composable
@@ -83,11 +83,11 @@ fun BarComposable(){
 }
 
 @Composable
-fun FloatComposable(navController: NavController?) {
+fun FloatComposable(navController: NavController? , navRoute: String) {
     FloatingActionButton(
         modifier = Modifier
             .size(70.dp),
-        onClick = {navController?.navigate("createGroup") },
+        onClick = {navController?.navigate(navRoute) },
         elevation = FloatingActionButtonDefaults.elevation(5.dp, 5.dp, 5.dp, 5.dp),
         shape = CircleShape,
         containerColor = white33
@@ -101,5 +101,5 @@ fun FloatComposable(navController: NavController?) {
 @Preview(name = "buttom")
 @Composable
 fun preview2(){
-    BComposable(null)
+
 }
