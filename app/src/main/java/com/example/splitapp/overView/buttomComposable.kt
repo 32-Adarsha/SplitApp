@@ -46,18 +46,8 @@ fun BarComposable(){
         Box(
             modifier = Modifier
                 .height(80.dp)
-                .background(white33)
+                .background(green32)
         ){
-            Surface(
-
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.bar),
-                    contentDescription = "navBar",
-                    tint = Color.Unspecified,
-                    modifier = Modifier.size(500.dp)
-                )
-            }
             Row (
                 modifier = Modifier
                     .fillMaxHeight()
@@ -71,6 +61,7 @@ fun BarComposable(){
                     contentDescription = "Home" ,
                     modifier = Modifier.size(40.dp),
                     tint = white32
+
                 )
                 Icon(
                     painter = painterResource(id = R.drawable.friend),

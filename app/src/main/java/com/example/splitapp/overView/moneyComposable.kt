@@ -40,13 +40,11 @@ import com.example.splitapp.ui.theme.white33
 @Composable
 fun moneyComposable() {
 
-    Box (
+    Box(
         modifier = Modifier.fillMaxWidth().height(200.dp),
         contentAlignment = Alignment.Center
 
     ) {
-
-
             Icon(
                 painter = painterResource(id = R.drawable.test),
                 contentDescription = "test",

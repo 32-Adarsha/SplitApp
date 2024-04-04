@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
@@ -28,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,15 +49,14 @@ import com.example.splitapp.ui.theme.green32
 
 @Composable
 fun LoginComposable(navController: NavController?) {
-    var username by remember {
+    var username by rememberSaveable {
         mutableStateOf("")
     }
-    var password by remember {
+    var password by rememberSaveable {
         mutableStateOf("")
     }
 
-
-    Column(
+    LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
@@ -63,7 +64,7 @@ fun LoginComposable(navController: NavController?) {
             .padding(30.dp)
 
     ) {
-        Column(
+        item{Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth(),
         ) {
@@ -77,26 +78,33 @@ fun LoginComposable(navController: NavController?) {
                 fontSize = 35.sp,
                 fontWeight = FontWeight.SemiBold
             )
-        }
+        }}
 
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.height(50.dp))
-            CustomInput(passedValue = username, onchange = {value -> username = value} , R.drawable.user)
-            Spacer(modifier = Modifier.height(10.dp))
-            CustomInput(passedValue = password, onchange = {value -> password = value} , R.drawable.oval)
-            Spacer(modifier = Modifier.height(10.dp))
-            Button(
-                onClick = {
-                          navController?.navigate("userView")
-                },
+        item {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "Sign In")
+                Spacer(modifier = Modifier.height(50.dp))
+                CustomInput(
+                    passedValue = username,
+                    onchange = { value -> username = value },
+                    R.drawable.user)
+                Spacer(modifier = Modifier.height(10.dp))
+                CustomInput(
+                    passedValue = password,
+                    onchange = { value -> password = value },
+                    R.drawable.oval)
+                Spacer(modifier = Modifier.height(10.dp))
+                Button(
+                    onClick = {
+                        navController?.navigate("userView")
+                    },
+                ) {
+                    Text(text = "Sign In")
+                }
             }
         }
-
 
     }
 
@@ -145,6 +153,7 @@ fun CustomInput(passedValue : String , onchange : (String) -> Unit, svgId :Int){
         }
     }
 }
+
 
 //@Preview
 //@Composable

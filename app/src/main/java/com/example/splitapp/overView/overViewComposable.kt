@@ -44,7 +44,7 @@ fun overView(navController: NavController?){
         Column (
             modifier = Modifier.weight(1f)
         ) {
-            topComposable()
+            topComposable(navController = navController)
             Spacer(modifier = Modifier.height(20.dp))
             moneyComposable()
             GroupComposable(navController = navController)
