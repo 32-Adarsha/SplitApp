@@ -1,4 +1,4 @@
-package com.example.splitapp.Group
+package com.example.splitapp.Views.Group
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -41,12 +41,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.splitapp.R
-import com.example.splitapp.login.LoginComposable
-import com.example.splitapp.overView.BComposable
-import com.example.splitapp.ui.theme.blue32
-import com.example.splitapp.ui.theme.green32
-import com.example.splitapp.ui.theme.orange32
-import com.example.splitapp.ui.theme.white33
+import com.example.splitapp.Views.login.LoginComposable
+
+import com.example.splitapp.Views.theme.blue32
+import com.example.splitapp.Views.theme.green32
+import com.example.splitapp.Views.theme.orange32
+import com.example.splitapp.Views.theme.white33
 
 
 val friend:Map<String , Float> = mapOf(
@@ -87,7 +87,7 @@ fun GroupOverViewComposable (navController: NavController? ,groupTitle:String) {
                 ) {
                 LogViewComposable()
             }
-            BComposable(navController = navController , navRoute = "makeTransaction")
+            //BComposable(navController = navController , navRoute = "makeTransaction")
         }
 
 
@@ -142,7 +142,8 @@ fun GroupMidTopComposable(friend:Map<String,Float>){
                     shape = CircleShape
                 ) {
                     Icon(painter = painterResource(id = R.drawable.plus), contentDescription = "Add",
-                        modifier = Modifier.padding(20.dp), tint = blue32)
+                        modifier = Modifier.padding(20.dp), tint = blue32
+                    )
                 }
                 Spacer(modifier = Modifier.height(15.dp))
                 Text(text = "Add" , fontSize =  20.sp , fontWeight = FontWeight.Bold , color = orange32)

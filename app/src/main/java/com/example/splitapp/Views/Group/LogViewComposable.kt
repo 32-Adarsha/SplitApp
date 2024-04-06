@@ -1,4 +1,4 @@
-package com.example.splitapp.Group
+package com.example.splitapp.Views.Group
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
@@ -30,9 +30,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.splitapp.ui.theme.blue32
-import com.example.splitapp.ui.theme.orange32
-import com.example.splitapp.ui.theme.white33
+import com.example.splitapp.Views.theme.blue32
+import com.example.splitapp.Views.theme.orange32
+import com.example.splitapp.Views.theme.white33
 
 
 @Composable
@@ -124,7 +124,7 @@ fun LogCardComposable(){
 }
 
 
-
+//
 //@Composable
 //@Preview
 //fun PreviewLogViewComposable(){

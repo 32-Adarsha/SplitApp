@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SplitApp</string>
+    <string name="user_photo"> User</string>
 </resources>

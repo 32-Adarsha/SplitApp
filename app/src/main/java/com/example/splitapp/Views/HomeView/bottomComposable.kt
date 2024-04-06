@@ -1,63 +1,53 @@
-package com.example.splitapp.overView
+package com.example.splitapp.Views.HomeView
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.splitapp.R
-import com.example.splitapp.ui.theme.green32
-import com.example.splitapp.ui.theme.orange32
-import com.example.splitapp.ui.theme.white32
-import com.example.splitapp.ui.theme.white33
-
+import com.example.splitapp.Views.theme.orange32
+import com.example.splitapp.Views.theme.white32
+import com.example.splitapp.Views.theme.white33
 
 @Composable
-fun BComposable(navController: NavController? , navRoute : String){
-    Box (
-        contentAlignment = Alignment.Center
+fun BottomComposable (navController: NavController?){
+    BottomAppBar(
+        containerColor = Color.Transparent,
+        contentColor = MaterialTheme.colorScheme.primary,
+        modifier = Modifier.padding(bottom = 5.dp).padding(horizontal = 5.dp)
     ) {
-        BarComposable()
-        FloatComposable(navController = navController , navRoute = navRoute)
-    }
-}
-@Composable
-fun BarComposable(){
-    Surface {
-        Box(
-            modifier = Modifier
-                .height(80.dp)
-                .background(white33)
-        ){
-            Surface(
+        Box (
+            contentAlignment = Alignment.Center,
 
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.bar),
-                    contentDescription = "navBar",
-                    tint = Color.Unspecified,
-                    modifier = Modifier.size(500.dp)
-                )
-            }
+            
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.bar),
+                contentDescription = stringResource(id = R.string.user_photo),
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier.padding(vertical = 1.dp)
+            )
+            FloatComposable2(navController = navController, navRoute = "createGroup" )
             Row (
                 modifier = Modifier
                     .fillMaxHeight()
@@ -76,30 +66,33 @@ fun BarComposable(){
                     painter = painterResource(id = R.drawable.friend),
                     contentDescription = "Friends",
                     modifier = Modifier.size(50.dp),
-                    tint = white32)
+                    tint = white32
+                )
             }
         }
+
     }
 }
 
+
 @Composable
-fun FloatComposable(navController: NavController? , navRoute: String) {
+fun FloatComposable2 (navController: NavController?, navRoute: String) {
     FloatingActionButton(
         modifier = Modifier
-            .size(70.dp),
+            .size(60.dp),
         onClick = {navController?.navigate(navRoute) },
         elevation = FloatingActionButtonDefaults.elevation(5.dp, 5.dp, 5.dp, 5.dp),
         shape = CircleShape,
         containerColor = white33
     ) {
-       Icon(painter = painterResource(id = R.drawable.plus), contentDescription = "add",
-           modifier = Modifier.size(25.dp),
-           tint = orange32     )
+        Icon(painter = painterResource(id = R.drawable.plus), contentDescription = "add",
+            modifier = Modifier.size(25.dp),
+            tint = orange32     )
     }
 }
 
-@Preview(name = "buttom")
+@Preview
 @Composable
-fun preview2(){
-
+fun PreviewBottomComposable(){
+    BottomComposable(null)
 }

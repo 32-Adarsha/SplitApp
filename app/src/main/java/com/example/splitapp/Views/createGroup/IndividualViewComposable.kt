@@ -1,21 +1,19 @@
-package com.example.splitapp.createGroup
+package com.example.splitapp.Views.createGroup
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -34,71 +32,34 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.splitapp.Group.friendViewComposable
-import com.example.splitapp.login.CustomInput
-import com.example.splitapp.ui.theme.blue32
-import com.example.splitapp.ui.theme.white33
+import com.example.splitapp.DataLayer.DataModel.Friend
+import com.example.splitapp.Views.theme.blue32
+import com.example.splitapp.Views.theme.white33
 import com.example.splitapp.R
-import com.example.splitapp.ui.theme.green32
-
-val friend:Map<String , Float> = mapOf(
-    "Samir" to 5.0f,
-    "Aakash" to 6.0f,
-    "Suman" to 8.0f,
-    "Krishna" to 0.0f,
-    "Samir" to 5.0f,
-    "Aakasha" to 6.0f,
-    "Sumana" to 8.0f,
-    "Krishnaa" to 0.0f,
-    "Samira" to 5.0f,
-    "Aakasha" to 6.0f,
-    "Sumana" to 8.0f,
-    "Krishnaa" to 0.0f
-)
+import com.example.splitapp.Views.Group.LogCardComposable
+import com.example.splitapp.Views.Group.friend
+import com.example.splitapp.Views.theme.green32
+import com.example.splitapp.Views.theme.orange32
 
 @Composable
-fun AddFriendComposable(){
-    var search by remember {
-        mutableStateOf("")
+fun IndividualViewComposable(friend: Friend , side: @Composable () -> Unit){
+    var color by remember {
+        mutableStateOf(Color.Gray)
     }
-    Surface (
-        shape = RoundedCornerShape(20.dp),
-        border = BorderStroke(1.dp, Color.Black),
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        Column (
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 10.dp, vertical = 10.dp)
-        ){
-            CustomInput(passedValue = search, onchange ={value -> search =value} , svgId = R.drawable.search)
-            Spacer(modifier = Modifier.height(5.dp))
-            selectedFriend()
-
-        }
-    }
-}
-
-@Composable
-fun friendListComposable(name:String){
-    var isChecked by remember {
-        mutableStateOf(false)
-    }
-    var checkedColor = if (isChecked) green32 else Color.Gray
-    Surface (
-        onClick = {isChecked = !isChecked}
+    Surface(
+        modifier = Modifier.padding(3.dp)
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .padding(horizontal = 15.dp, vertical = 5.dp)
+                .padding(vertical = 5.dp)
                 .fillMaxWidth()
                 .height(50.dp),
-
-            ) {
-            Row {
+        ) {
+            Row (
+                horizontalArrangement = Arrangement.SpaceBetween
+            ){
                 Surface(
                     border = BorderStroke(1.dp, Color.Black),
                     modifier = Modifier.size(50.dp),
@@ -113,13 +74,13 @@ fun friendListComposable(name:String){
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = name,
+                        text = friend.name,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
                         color = blue32
                     )
                     Text(
-                        text = "nickname",
+                        text = friend.nickname,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Normal,
                         color = blue32,
@@ -127,48 +88,24 @@ fun friendListComposable(name:String){
                     )
                 }
 
+
             }
 
-            Icon(
-                painter = painterResource(id = R.drawable.check),
-                contentDescription = "checkBox",
-                modifier = Modifier.size(15.dp),
-                tint = checkedColor,
-            )
-
+            side()
 
         }
     }
 }
+
+
+
+@Preview
 @Composable
-fun selectedFriend(){
-    Surface (
-        shape = RoundedCornerShape(20.dp),
-        modifier = Modifier
-    ){
-        LazyColumn(){
-            items(friend.size){index ->
-                val entry = friend.entries.elementAt(index)
-                friendListComposable(name = entry.key )
-            }
-        }
+fun PreviewIndComposable(){
+    var color by remember {
+        mutableStateOf(Color.Gray)
     }
-}
-
-@Preview
-@Composable
-fun PreviewselectedFriend(){
-    selectedFriend()
-}
-
-@Preview
-@Composable
-fun PreviewfriendViewComposable(){
-    friendListComposable(name = "Adarsha")
-}
-
-@Preview
-@Composable
-fun PreviewfriendComposable(){
-    AddFriendComposable()
+    IndividualViewComposable(friend = Friend("Adarsha" , "Kira")) {
+        Icon(painter = painterResource(id = R.drawable.check), contentDescription = "" , modifier = Modifier.size(50.dp))
+    }
 }

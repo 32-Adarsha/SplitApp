@@ -1,4 +1,4 @@
-package com.example.splitapp.ui.theme
+package com.example.splitapp.Views.theme
 
 import android.app.Activity
 import android.os.Build

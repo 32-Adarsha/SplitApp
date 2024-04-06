@@ -4,9 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -20,17 +17,19 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.example.splitapp.Group.GroupOverViewComposable
-import com.example.splitapp.Transaction.mainTransactionComposable
-import com.example.splitapp.createGroup.CreateGroupComposable
-import com.example.splitapp.data.dataViewModel
-import com.example.splitapp.login.LoginComposable
-import com.example.splitapp.overView.overView
-import com.example.splitapp.ui.theme.SplitAppTheme
+import com.example.splitapp.DataLayer.DataViewModel.SplitViewModel
+import com.example.splitapp.Views.Group.GroupOverViewComposable
+
+import com.example.splitapp.Views.login.LoginComposable
+import com.example.splitapp.Views.HomeView.HomeComposable
+import com.example.splitapp.Views.createGroup.MakeGroupComposable
+
+
+import com.example.splitapp.Views.theme.SplitAppTheme
 
 class MainActivity : ComponentActivity() {
 
-
+    private val viewModel: SplitViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -57,10 +56,10 @@ class MainActivity : ComponentActivity() {
                         route = "userView"
                     ){
                         composable("overView"){
-                                overView(navController = navController)
+                                HomeComposable(navController= navController , viewModel)
                         }
                         composable("createGroup"){
-                                CreateGroupComposable()
+                                MakeGroupComposable(navController , viewModel)
                         }
 
                     }
@@ -72,7 +71,7 @@ class MainActivity : ComponentActivity() {
                             GroupOverViewComposable(navController = navController , "Vatmara")
                         }
                         composable("makeTransaction"){
-                            mainTransactionComposable()
+
                         }
                     }
                 }

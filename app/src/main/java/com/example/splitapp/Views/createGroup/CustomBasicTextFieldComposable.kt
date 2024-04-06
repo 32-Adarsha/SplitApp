@@ -1,4 +1,4 @@
-package com.example.splitapp.createGroup
+package com.example.splitapp.Views.createGroup
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Row
@@ -25,8 +25,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.splitapp.ui.theme.blue32
-import com.example.splitapp.ui.theme.green32
+import com.example.splitapp.Views.theme.blue32
+import com.example.splitapp.Views.theme.green32
 
 
 @Composable

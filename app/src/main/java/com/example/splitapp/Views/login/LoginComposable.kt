@@ -1,4 +1,4 @@
-package com.example.splitapp.login
+package com.example.splitapp.Views.login
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -43,7 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.splitapp.R
-import com.example.splitapp.ui.theme.green32
+import com.example.splitapp.Views.theme.green32
 
 @Composable
 fun LoginComposable(navController: NavController?) {
