@@ -1,5 +1,6 @@
 package com.example.splitapp.Views.createGroup
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -46,6 +47,7 @@ import com.example.splitapp.Views.theme.green32
 
 
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun AddFriendComposable(viewModel: SplitViewModel ,onAdd:(MutableList<Friend>)-> Unit ) {
     var search by remember {

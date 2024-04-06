@@ -30,7 +30,7 @@ import com.example.splitapp.Views.theme.white32
 import com.example.splitapp.Views.theme.white33
 
 @Composable
-fun BottomComposable (navController: NavController?){
+fun BottomComposable (navController: NavController? , path:String ){
     BottomAppBar(
         containerColor = Color.Transparent,
         contentColor = MaterialTheme.colorScheme.primary,
@@ -47,7 +47,7 @@ fun BottomComposable (navController: NavController?){
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier.padding(vertical = 1.dp)
             )
-            FloatComposable2(navController = navController, navRoute = "createGroup" )
+            FloatComposable2(navController = navController, navRoute = path )
             Row (
                 modifier = Modifier
                     .fillMaxHeight()
@@ -91,8 +91,8 @@ fun FloatComposable2 (navController: NavController?, navRoute: String) {
     }
 }
 
-@Preview
-@Composable
-fun PreviewBottomComposable(){
-    BottomComposable(null)
-}
+//@Preview
+//@Composable
+//fun PreviewBottomComposable(){
+//    BottomComposable(null)
+//}

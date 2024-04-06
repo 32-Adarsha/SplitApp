@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.splitapp.DataLayer.DataModel.Friend
+import com.example.splitapp.DataLayer.DataModel.GroupLog
 import com.example.splitapp.DataLayer.DataModel.GroupModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,6 +19,8 @@ class SplitViewModel:ViewModel() {
     val friend :StateFlow<MutableList<Friend>> = _friend.asStateFlow()
     val _count = MutableStateFlow<Int>(0)
     val count: StateFlow<Int> = _count.asStateFlow()
+    val _viewGroupDetail = MutableStateFlow<Int>(0)
+    val viewGroupDetail = _viewGroupDetail.asStateFlow()
 
     init {
         var listOfriend:MutableList<Friend> = mutableListOf (
@@ -48,6 +51,18 @@ class SplitViewModel:ViewModel() {
     fun logCount(){
         Log.e("log" , "${_count.value}")
     }
+
+    fun selectedGroup(id:Int){
+        val newId = id
+        _viewGroupDetail.value = newId
+    }
+
+    fun postTransaction(id:Int , llog:GroupLog){
+        val test = _allGroup.value
+        test[id].log.add(llog)
+        _allGroup.value = test
+    }
+
 
 
 

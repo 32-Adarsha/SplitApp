@@ -22,8 +22,8 @@ data class Friend (
 
 
 data class GroupLog (
-    val id : Int,
     val name : String,
+    val total : String,
     val description: String,
     val involved: List<Friend>
 )

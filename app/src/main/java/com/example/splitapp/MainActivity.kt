@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,6 +24,7 @@ import com.example.splitapp.Views.Group.GroupOverViewComposable
 
 import com.example.splitapp.Views.login.LoginComposable
 import com.example.splitapp.Views.HomeView.HomeComposable
+import com.example.splitapp.Views.Transaction.mainTransactionComposable
 import com.example.splitapp.Views.createGroup.MakeGroupComposable
 
 
@@ -34,6 +37,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             SplitAppTheme {
+                val thisId by viewModel.viewGroupDetail.collectAsState()
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = "auth" ){
                     navigation(
@@ -68,10 +72,10 @@ class MainActivity : ComponentActivity() {
                         route = "groupView"
                     ){
                         composable("group"){
-                            GroupOverViewComposable(navController = navController , "Vatmara")
+                            GroupOverViewComposable(navController = navController , "Vatmara" , viewModel ,thisId )
                         }
                         composable("makeTransaction"){
-
+                            mainTransactionComposable(navController ,viewModel , thisId)
                         }
                     }
                 }

@@ -22,7 +22,7 @@ fun HomeComposable(navController: NavController? , viewModel: SplitViewModel) {
             topComposable()
         },
         bottomBar = {
-            BottomComposable(navController)
+            BottomComposable(navController , "createGroup")
         },
     ) { innerPadding ->
         Column(

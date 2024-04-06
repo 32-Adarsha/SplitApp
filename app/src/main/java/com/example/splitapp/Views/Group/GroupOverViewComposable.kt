@@ -28,6 +28,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,13 +42,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.splitapp.DataLayer.DataViewModel.SplitViewModel
 import com.example.splitapp.R
+import com.example.splitapp.Views.HomeView.BottomComposable
 import com.example.splitapp.Views.login.LoginComposable
 
 import com.example.splitapp.Views.theme.blue32
 import com.example.splitapp.Views.theme.green32
 import com.example.splitapp.Views.theme.orange32
 import com.example.splitapp.Views.theme.white33
+import kotlinx.coroutines.flow.collect
 
 
 val friend:Map<String , Float> = mapOf(
@@ -58,19 +63,20 @@ val friend:Map<String , Float> = mapOf(
 
 
 @Composable
-fun GroupOverViewComposable (navController: NavController? ,groupTitle:String) {
+fun GroupOverViewComposable (navController: NavController? , name: String, viewModel: SplitViewModel , id:Int) {
+    val allG by viewModel.allGroup.collectAsState()
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Column(
             modifier = Modifier
                 .padding(horizontal = 10.dp, vertical = 10.dp)
         ) {
-            GroupTopComposable(name = "Vatmara")
+            GroupTopComposable(navController ,name = allG[id].name)
             Spacer(modifier = Modifier.height(50.dp))
-            GroupMidTopComposable(friend = friend)
+            GroupMidTopComposable(viewModel , id)
             Spacer(modifier = Modifier.height(30.dp))
             Text(
                 text = "Transaction",
@@ -85,12 +91,12 @@ fun GroupOverViewComposable (navController: NavController? ,groupTitle:String) {
                     .weight(1f)
                     .background(Color.Transparent),
                 ) {
-                LogViewComposable()
+                LogViewComposable(viewModel , id)
             }
-            //BComposable(navController = navController , navRoute = "makeTransaction")
+            BottomComposable(navController = navController , path = "makeTransaction")
         }
 
-
+        
 
 
 
@@ -99,13 +105,20 @@ fun GroupOverViewComposable (navController: NavController? ,groupTitle:String) {
 }
 
 @Composable
-fun GroupTopComposable(name:String){
+fun GroupTopComposable(navController: NavController?, name:String){
     Row (
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(painter = painterResource(id = R.drawable.backarrow), contentDescription = "backArrow")
-        Surface(
+        Surface (
+            onClick ={
+                navController?.popBackStack()
+            }
+        ){
+            Icon(painter = painterResource(id = R.drawable.backarrow), contentDescription = "backArrow")
+
+        }
+       Surface(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
@@ -123,7 +136,8 @@ fun GroupTopComposable(name:String){
 
 
 @Composable
-fun GroupMidTopComposable(friend:Map<String,Float>){
+fun GroupMidTopComposable(viewModel: SplitViewModel , id: Int){
+    val group by viewModel.allGroup.collectAsState()
     LazyRow(
         modifier = Modifier.padding(horizontal = 5.dp),
         horizontalArrangement = Arrangement.SpaceBetween
@@ -151,16 +165,17 @@ fun GroupMidTopComposable(friend:Map<String,Float>){
 
             }
         }
-        items(friend.size){index ->
-            val entry = friend.entries.elementAt(index)
-            friendViewComposable(name = entry.key, owes = entry.value)
+        val f = group[id].member
+        items(f.size){index ->
+            val entry = f[index]
+            friendViewComposable(entry.name)
         }
     }
 
 }
 
 @Composable
-fun friendViewComposable(name:String , owes:Float){
+fun friendViewComposable(name:String , owes:Float = 0f){
     Column (
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -176,7 +191,7 @@ fun friendViewComposable(name:String , owes:Float){
         }
         Spacer(modifier = Modifier.height(2.dp))
         Text(text = name, fontSize =  20.sp , fontWeight = FontWeight.Bold , color = blue32)
-        Text(text = "$${owes.toString()}" , fontSize =  15.sp , fontWeight = FontWeight.Bold , color = green32)
+//        Text(text = "$${owes.toString()}" , fontSize =  15.sp , fontWeight = FontWeight.Bold , color = green32)
     }
 }
 
@@ -190,22 +205,22 @@ fun friendViewComposable(name:String , owes:Float){
 
 
 
-@Preview(name = "Friend")
-@Composable
-fun PreviewfriendView(){
-    friendViewComposable(name = "Adarsha", owes = 5.0f)
-}
+//@Preview(name = "Friend")
+//@Composable
+//fun PreviewfriendView(){
+//    friendViewComposable(name = "Adarsha", owes = 5.0f)
+//}
 
-@Preview(name = "MidComposable")
-@Composable
-fun PreviewGroupMidComposable(){
+//@Preview(name = "MidComposable")
+//@Composable
+//fun PreviewGroupMidComposable(){
+//
+//    GroupMidTopComposable( friend)
+//}
+//
 
-    GroupMidTopComposable( friend)
-}
-
-
-@Preview
-@Composable
-fun previewGroupOverViewComposable (){
-    GroupOverViewComposable(null,"Vatmara")
-}
+//@Preview
+//@Composable
+//fun previewGroupOverViewComposable (){
+//    GroupOverViewComposable(null,"Vatmara" , null , 0)
+//}

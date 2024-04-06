@@ -1,5 +1,6 @@
 package com.example.splitapp.Views.HomeView
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import com.example.splitapp.Views.theme.green32
@@ -66,7 +67,10 @@ fun GroupComposable(
                 items(groupModel.size) { index ->
 
                     Surface(
-                        onClick = { navController?.navigate("groupView") }
+                        onClick = {
+                            Log.e("T"  , "$index")
+                            viewModel.selectedGroup(index)
+                            navController?.navigate("groupView") }
                     ) {
                         GroupCard(navController,groupModel[index].name,groupModel[index].owes)
                     }
