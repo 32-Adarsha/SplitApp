@@ -44,6 +44,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.splitapp.DataLayer.DataViewModel.SplitViewModel
 import com.example.splitapp.R
+import com.example.splitapp.Views.GlobalComposable.HeaderComposable
+import com.example.splitapp.Views.GlobalComposable.TopComposable
 import com.example.splitapp.Views.HomeView.BottomComposable
 import com.example.splitapp.Views.login.LoginComposable
 
@@ -54,12 +56,7 @@ import com.example.splitapp.Views.theme.white33
 import kotlinx.coroutines.flow.collect
 
 
-val friend:Map<String , Float> = mapOf(
-    "Samir" to 5.0f,
-    "Aakash" to 6.0f,
-    "Suman" to 8.0f,
-    "Krishna" to 0.0f
-)
+
 
 
 @Composable
@@ -74,7 +71,8 @@ fun GroupOverViewComposable (navController: NavController? , name: String, viewM
             modifier = Modifier
                 .padding(horizontal = 10.dp, vertical = 10.dp)
         ) {
-            GroupTopComposable(navController ,name = allG[id].name)
+            TopComposable(navController)
+            HeaderComposable(title = name)
             Spacer(modifier = Modifier.height(50.dp))
             GroupMidTopComposable(viewModel , id)
             Spacer(modifier = Modifier.height(30.dp))
@@ -95,44 +93,11 @@ fun GroupOverViewComposable (navController: NavController? , name: String, viewM
             }
             BottomComposable(navController = navController , path = "makeTransaction")
         }
-
-        
-
-
-
     }
 
 }
 
-@Composable
-fun GroupTopComposable(navController: NavController?, name:String){
-    Row (
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Surface (
-            onClick ={
-                navController?.popBackStack()
-            }
-        ){
-            Icon(painter = painterResource(id = R.drawable.backarrow), contentDescription = "backArrow")
 
-        }
-       Surface(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-        ) {
-            Text(text = name ,
-                textAlign = TextAlign.Center,
-                fontSize = 30.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-
-    }
-}
 
 
 @Composable

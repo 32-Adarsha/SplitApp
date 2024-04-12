@@ -36,10 +36,7 @@ import com.example.splitapp.DataLayer.DataModel.Friend
 import com.example.splitapp.Views.theme.blue32
 import com.example.splitapp.Views.theme.white33
 import com.example.splitapp.R
-import com.example.splitapp.Views.Group.LogCardComposable
-import com.example.splitapp.Views.Group.friend
-import com.example.splitapp.Views.theme.green32
-import com.example.splitapp.Views.theme.orange32
+
 
 @Composable
 fun IndividualViewComposable(friend: Friend , side: @Composable () -> Unit){

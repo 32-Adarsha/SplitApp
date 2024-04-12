@@ -1,10 +1,12 @@
 package com.example.splitapp.Views.Transaction
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -45,10 +47,11 @@ import com.example.splitapp.DataLayer.DataModel.Friend
 import com.example.splitapp.DataLayer.DataModel.GroupLog
 import com.example.splitapp.DataLayer.DataViewModel.SplitViewModel
 import com.example.splitapp.R
+import com.example.splitapp.Views.GlobalComposable.TopComposable
 import com.example.splitapp.Views.createGroup.AddFriendComposable
 import com.example.splitapp.Views.createGroup.CustomInputforThis
 import com.example.splitapp.Views.createGroup.IndividualViewComposable
-import com.example.splitapp.Views.createGroup.SelectTopComposable
+
 
 
 import com.example.splitapp.Views.theme.blue32
@@ -96,7 +99,7 @@ fun mainTransactionComposable(navController: NavController,viewModel: SplitViewM
             .fillMaxSize()
             .padding(10.dp)
     ) {
-        SelectTopComposable()
+        TopComposable(navController)
         Spacer(modifier = Modifier.height(10.dp))
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -188,11 +191,7 @@ fun mainTransactionComposable(navController: NavController,viewModel: SplitViewM
                 items(member.size){index ->
                     IndividualViewComposable(friend = member[index]) {
                         Surface (
-                            onClick = ({
-                                run {
-                                    member = (member - member[index]).toMutableList()
-                                }
-                            })
+
                         ) {
                             Row (
                                 verticalAlignment = Alignment.CenterVertically,
@@ -201,8 +200,24 @@ fun mainTransactionComposable(navController: NavController,viewModel: SplitViewM
                                     mutableStateOf("")
                                 }
                                 OutlinedTextField(value = thisVaue , onValueChange = {thisVaue = it} , modifier = Modifier.width(100.dp) , textStyle = TextStyle(fontWeight = FontWeight.Bold, fontSize = 15.sp, lineHeight = 30.sp))
-                                Icon(painter = painterResource(id = R.drawable.trash), contentDescription = "Delete" , modifier = Modifier.size(25.dp) , tint = orange32 )
+                                Surface(
+                                    onClick = ({
+                                        run {
+                                            member = (member - member[index]).toMutableList()
+                                        }
+                                    }),
+                                    modifier = Modifier.background(orange32)
 
+                                ) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.trash),
+                                        contentDescription = "Delete",
+                                        modifier = Modifier.size(25.dp).background(
+                                            orange32),
+                                        tint = Color.White,
+
+                                    )
+                                }
                             }
 
                         }

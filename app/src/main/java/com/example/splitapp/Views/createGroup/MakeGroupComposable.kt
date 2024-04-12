@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,7 +38,10 @@ import com.example.splitapp.DataLayer.DataModel.Friend
 import com.example.splitapp.DataLayer.DataModel.GroupModel
 import com.example.splitapp.DataLayer.DataViewModel.SplitViewModel
 import com.example.splitapp.R
+import com.example.splitapp.Views.GlobalComposable.HeaderComposable
+import com.example.splitapp.Views.GlobalComposable.TopComposable
 import com.example.splitapp.Views.theme.blue32
+import com.example.splitapp.Views.theme.green32
 import com.example.splitapp.Views.theme.orange32
 
 @Composable
@@ -94,8 +98,8 @@ Column (
     verticalArrangement = Arrangement.Center,
     modifier = Modifier.padding(15.dp)
 ) {
-    SelectTopComposable()
-
+    TopComposable(navController = navController)
+    HeaderComposable(title = "Create Group")
     OutlinedTextField(
         modifier = Modifier.fillMaxWidth(),
         value = name,
@@ -175,21 +179,7 @@ Column (
 
 
 
-@Composable
-fun SelectTopComposable() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 5.dp),
-        verticalAlignment = Alignment.CenterVertically
 
-    ) {
-        Icon(
-            painter = painterResource(id = R.drawable.backarrow),
-            contentDescription = "backArrow",
-            modifier = Modifier.size(30.dp))
-    }
-}
 
 
 
