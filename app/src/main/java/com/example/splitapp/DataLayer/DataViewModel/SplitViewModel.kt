@@ -35,8 +35,6 @@ class SplitViewModel:ViewModel() {
     fun addGroup(newGroup:GroupModel){
         viewModelScope.launch {
        try {
-
-
            val gList: List<GroupModel> = _allGroup.value.toMutableList() + newGroup
            _allGroup.value = gList
            val c= _count.value+1

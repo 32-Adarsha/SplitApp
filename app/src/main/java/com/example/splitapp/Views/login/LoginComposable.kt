@@ -1,9 +1,10 @@
 package com.example.splitapp.Views.login
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -34,23 +36,40 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.splitapp.DataLayer.DataViewModel.AuthViewModel
 import com.example.splitapp.R
 import com.example.splitapp.Views.theme.green32
+import com.example.splitapp.Views.theme.orange32
+import kotlinx.coroutines.launch
 
 @Composable
-fun LoginComposable(navController: NavController?) {
-    var username by remember {
+fun LoginComposable(navController: NavController? , authViewModel: AuthViewModel) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    var email by remember {
         mutableStateOf("")
     }
     var password by remember {
+        mutableStateOf("")
+    }
+
+    var error  by remember {
+        mutableStateOf(false)
+    }
+
+    var errorMessage by remember {
         mutableStateOf("")
     }
 
@@ -84,16 +103,71 @@ fun LoginComposable(navController: NavController?) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(50.dp))
-            CustomInput(passedValue = username, onchange = {value -> username = value} , R.drawable.user)
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                value = email,
+                onValueChange = { newText ->
+                    email = newText
+                    error = false
+                },
+                label = {
+                    Text(text = "Username")
+                },
+                shape = RoundedCornerShape(percent = 20),
+            )
             Spacer(modifier = Modifier.height(10.dp))
-            CustomInput(passedValue = password, onchange = {value -> password = value} , R.drawable.oval)
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                value = password,
+                onValueChange = { newText ->
+                    password = newText
+                    error = false
+                },
+                visualTransformation =  PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                label = {
+                    Text(text = "Password")
+                },
+                placeholder = { Text(text = "Type password here") },
+                shape = RoundedCornerShape(percent = 20),
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            if (error){
+                Text(text = errorMessage , color = orange32)
+            }
             Spacer(modifier = Modifier.height(10.dp))
             Button(
                 onClick = {
-                          navController?.navigate("userView")
+                          coroutineScope.launch {
+                              val isSuccessful = authViewModel?.signin(email, password)?.await() ?: false
+                              if (isSuccessful){
+                                  Toast.makeText(
+                                      context,
+                                      "Successfully logged in",
+                                      Toast.LENGTH_LONG
+                                  ).show()
+                                  navController?.navigate("overView")
+                              } else
+                              {
+                                  error = true
+                                  errorMessage = "wrong username or password"
+                                  Toast.makeText(
+                                      context,
+                                      "Sign in failed",
+                                      Toast.LENGTH_LONG
+                                  ).show()
+                              }
+                          }
                 },
             ) {
                 Text(text = "Sign In")
+            }
+            Surface (
+                onClick = {navController?.navigate("register")}
+            ){
+                Text(text = "New! Register your account" , textDecoration = TextDecoration.Underline)
             }
         }
 

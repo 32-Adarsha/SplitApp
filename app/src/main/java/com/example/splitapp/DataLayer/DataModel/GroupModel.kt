@@ -17,14 +17,13 @@ data class Friend (
     val nickname: String,
 )
 
-
-
-
-
 data class GroupLog (
     val name : String,
     val total : String,
     val description: String,
     val involved: List<Friend>
 )
+
+
+
 

@@ -19,20 +19,25 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.example.splitapp.DataLayer.DataViewModel.AuthViewModel
 import com.example.splitapp.DataLayer.DataViewModel.SplitViewModel
 import com.example.splitapp.Views.Group.GroupOverViewComposable
 
 import com.example.splitapp.Views.login.LoginComposable
 import com.example.splitapp.Views.HomeView.HomeComposable
+import com.example.splitapp.Views.SignUpCompose
 import com.example.splitapp.Views.Transaction.mainTransactionComposable
 import com.example.splitapp.Views.createGroup.MakeGroupComposable
 
 
 import com.example.splitapp.Views.theme.SplitAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val viewModel: SplitViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -45,10 +50,10 @@ class MainActivity : ComponentActivity() {
                         route  = "auth"
                     ){
                         composable("register"){
-
+                            SignUpCompose(navController = navController , authViewModel)
                         }
                         composable("login"){
-                            LoginComposable(navController = navController)
+                            LoginComposable(navController = navController , authViewModel)
                         }
                         composable("forgetPassword"){
 

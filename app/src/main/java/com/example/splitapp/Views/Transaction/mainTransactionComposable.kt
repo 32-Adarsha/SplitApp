@@ -57,6 +57,7 @@ import com.example.splitapp.Views.createGroup.IndividualViewComposable
 import com.example.splitapp.Views.theme.blue32
 import com.example.splitapp.Views.theme.green32
 import com.example.splitapp.Views.theme.orange32
+import com.example.splitapp.Views.theme.white33
 
 
 enum class Transaction {
@@ -200,20 +201,25 @@ fun mainTransactionComposable(navController: NavController,viewModel: SplitViewM
                                     mutableStateOf("")
                                 }
                                 OutlinedTextField(value = thisVaue , onValueChange = {thisVaue = it} , modifier = Modifier.width(100.dp) , textStyle = TextStyle(fontWeight = FontWeight.Bold, fontSize = 15.sp, lineHeight = 30.sp))
+                                Spacer(modifier = Modifier.width(5.dp))
                                 Surface(
                                     onClick = ({
                                         run {
                                             member = (member - member[index]).toMutableList()
                                         }
                                     }),
-                                    modifier = Modifier.background(orange32)
+                                    border = BorderStroke(1.dp, Color.Black),
+                                    shape = RoundedCornerShape(5.dp),
 
                                 ) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.trash),
                                         contentDescription = "Delete",
-                                        modifier = Modifier.size(25.dp).background(
-                                            orange32),
+                                        modifier = Modifier
+                                            .size(25.dp)
+                                            .background(
+                                                orange32
+                                            ),
                                         tint = Color.White,
 
                                     )
