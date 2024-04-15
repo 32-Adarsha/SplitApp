@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModel
@@ -20,6 +21,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.splitapp.DataLayer.DataViewModel.AuthViewModel
+import com.example.splitapp.DataLayer.DataViewModel.DataViewModel
 import com.example.splitapp.DataLayer.DataViewModel.SplitViewModel
 import com.example.splitapp.Views.Group.GroupOverViewComposable
 
@@ -32,16 +34,23 @@ import com.example.splitapp.Views.createGroup.MakeGroupComposable
 
 import com.example.splitapp.Views.theme.SplitAppTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val viewModel: SplitViewModel by viewModels()
+    private val testViewModel:DataViewModel by viewModels()
     private val authViewModel: AuthViewModel by viewModels()
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             SplitAppTheme {
+
+
                 val thisId by viewModel.viewGroupDetail.collectAsState()
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = "auth" ){
@@ -53,7 +62,7 @@ class MainActivity : ComponentActivity() {
                             SignUpCompose(navController = navController , authViewModel)
                         }
                         composable("login"){
-                            LoginComposable(navController = navController , authViewModel)
+                            LoginComposable(navController = navController , authViewModel , testViewModel)
                         }
                         composable("forgetPassword"){
 

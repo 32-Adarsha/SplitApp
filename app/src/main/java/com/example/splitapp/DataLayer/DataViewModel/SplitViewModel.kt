@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.splitapp.DataLayer.DataModel.Friend
 import com.example.splitapp.DataLayer.DataModel.GroupLog
 import com.example.splitapp.DataLayer.DataModel.GroupModel
+import com.google.firebase.Firebase
+import com.google.firebase.database.database
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,6 +23,8 @@ class SplitViewModel:ViewModel() {
     val count: StateFlow<Int> = _count.asStateFlow()
     val _viewGroupDetail = MutableStateFlow<Int>(0)
     val viewGroupDetail = _viewGroupDetail.asStateFlow()
+
+
 
     init {
         var listOfriend:MutableList<Friend> = mutableListOf (
@@ -39,6 +43,9 @@ class SplitViewModel:ViewModel() {
            _allGroup.value = gList
            val c= _count.value+1
            _count.value = c
+           //
+
+
        }catch (e:Exception){
            Log.e("Test" , "${e.message}")
        }

@@ -49,13 +49,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.splitapp.DataLayer.DataViewModel.AuthViewModel
+import com.example.splitapp.DataLayer.DataViewModel.DataViewModel
 import com.example.splitapp.R
 import com.example.splitapp.Views.theme.green32
 import com.example.splitapp.Views.theme.orange32
 import kotlinx.coroutines.launch
 
 @Composable
-fun LoginComposable(navController: NavController? , authViewModel: AuthViewModel) {
+fun LoginComposable(navController: NavController? , authViewModel: AuthViewModel ,testModle:DataViewModel) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     var email by remember {
@@ -140,6 +141,7 @@ fun LoginComposable(navController: NavController? , authViewModel: AuthViewModel
             Spacer(modifier = Modifier.height(10.dp))
             Button(
                 onClick = {
+                    
                           coroutineScope.launch {
                               val isSuccessful = authViewModel?.signin(email, password)?.await() ?: false
                               if (isSuccessful){
@@ -168,6 +170,11 @@ fun LoginComposable(navController: NavController? , authViewModel: AuthViewModel
                 onClick = {navController?.navigate("register")}
             ){
                 Text(text = "New! Register your account" , textDecoration = TextDecoration.Underline)
+            }
+            
+            
+            Button(onClick = { testModle.onSelect() }) {
+                Text(text = "TEst")
             }
         }
 

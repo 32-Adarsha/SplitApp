@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "6765335420",
+    "firebase_url": "https://newtest-50df4-default-rtdb.firebaseio.com",
+    "project_id": "newtest-50df4",
+    "storage_bucket": "newtest-50df4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:6765335420:android:cf13d11873c4878ec98af9",
+        "android_client_info": {
+          "package_name": "com.example.splitapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGCLyWY9Jjas7Iokb8wIgnnMkStTyY3X0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

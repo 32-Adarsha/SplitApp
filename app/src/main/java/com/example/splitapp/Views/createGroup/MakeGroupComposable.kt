@@ -1,5 +1,6 @@
 package com.example.splitapp.Views.createGroup
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -43,12 +44,15 @@ import com.example.splitapp.Views.GlobalComposable.TopComposable
 import com.example.splitapp.Views.theme.blue32
 import com.example.splitapp.Views.theme.green32
 import com.example.splitapp.Views.theme.orange32
+import com.google.firebase.Firebase
+import com.google.firebase.database.database
 
 @Composable
 fun MakeGroupComposable (
     navController: NavController,
     viewModel: SplitViewModel
 ) {
+    val database = Firebase.database("https://newtest-50df4-default-rtdb.firebaseio.com/")
 
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
@@ -161,8 +165,18 @@ Column (
 
 
     Button(onClick = {
-                     var group = GroupModel(name , description , member)
-                     viewModel.addGroup(group)
+
+
+        var group = GroupModel(name , description , member)
+        try {
+            val groupsRef = database.reference.child("Groups")
+            var groupRef = groupsRef.child("$name")
+            groupRef.setValue(group)
+        } catch (e:Exception){
+            Log.e("string" , "$e")
+        }
+
+        viewModel.addGroup(group)
                      viewModel.logCount()
                      navController.popBackStack()
     } ,
