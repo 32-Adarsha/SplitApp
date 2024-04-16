@@ -13,31 +13,26 @@ import javax.inject.Singleton
 class AuthRepository @Inject constructor(
     private val auth:FirebaseAuth
 ) : IAuthRepository {
-    override var user: FirebaseUser?= null
-        get() = field
-        set(value) {field = value}
     override suspend fun firebaseSignUpWithEmailAndPassword(
         email: String,
         password: String
-    ): Boolean {
+    ): FirebaseUser? {
         try {
             auth.createUserWithEmailAndPassword(email, password).await()
-            user = auth.currentUser
-            return true
+            return auth.currentUser
         } catch(e:Exception) {
-            return false
+            return null
         }
     }
 
     override suspend fun firebaseSignInWithEmailAndPassword(
         email: String, password: String
-    ) :Boolean {
+    ) :FirebaseUser? {
         try {
             auth.signInWithEmailAndPassword(email, password).await()
-            auth.currentUser
-            return true
+            return auth.currentUser
         } catch (e: Exception) {
-            return false
+            return null
         }
     }
 }

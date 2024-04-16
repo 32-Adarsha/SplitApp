@@ -61,7 +61,7 @@ import kotlinx.coroutines.flow.collect
 
 @Composable
 fun GroupOverViewComposable (navController: NavController? , name: String, viewModel: SplitViewModel , id:Int) {
-    val allG by viewModel.allGroup.collectAsState()
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween,

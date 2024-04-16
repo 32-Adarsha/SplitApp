@@ -5,8 +5,7 @@ import com.google.firebase.auth.FirebaseUser
 import java.util.function.BiPredicate
 
 interface IAuthRepository {
-    var user:FirebaseUser?
-    suspend fun firebaseSignUpWithEmailAndPassword(email: String, password: String): Boolean
-    suspend fun firebaseSignInWithEmailAndPassword(email: String, password: String) :Boolean
+    suspend fun firebaseSignUpWithEmailAndPassword(email: String, password: String): FirebaseUser?
+    suspend fun firebaseSignInWithEmailAndPassword(email: String, password: String) :FirebaseUser?
 
 }

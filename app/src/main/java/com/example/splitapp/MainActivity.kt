@@ -20,6 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.example.splitapp.DataLayer.DataViewModel.AllFriendViewModel
 import com.example.splitapp.DataLayer.DataViewModel.AuthViewModel
 import com.example.splitapp.DataLayer.DataViewModel.DataViewModel
 import com.example.splitapp.DataLayer.DataViewModel.SplitViewModel
@@ -40,9 +41,9 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
 
     private val viewModel: SplitViewModel by viewModels()
-    private val testViewModel:DataViewModel by viewModels()
+    private val dataViewModel:DataViewModel by viewModels()
     private val authViewModel: AuthViewModel by viewModels()
-
+    private val allFriendViewModel:AllFriendViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,10 +60,10 @@ class MainActivity : ComponentActivity() {
                         route  = "auth"
                     ){
                         composable("register"){
-                            SignUpCompose(navController = navController , authViewModel)
+                            SignUpCompose(navController = navController , authViewModel , dataViewModel , allFriendViewModel)
                         }
                         composable("login"){
-                            LoginComposable(navController = navController , authViewModel , testViewModel)
+                            LoginComposable(navController = navController , authViewModel , dataViewModel)
                         }
                         composable("forgetPassword"){
 

@@ -1,5 +1,6 @@
 package com.example.splitapp.Views.login
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -27,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -57,6 +59,10 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LoginComposable(navController: NavController? , authViewModel: AuthViewModel ,testModle:DataViewModel) {
+
+
+
+
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     var email by remember {
@@ -143,8 +149,8 @@ fun LoginComposable(navController: NavController? , authViewModel: AuthViewModel
                 onClick = {
                     
                           coroutineScope.launch {
-                              val isSuccessful = authViewModel?.signin(email, password)?.await() ?: false
-                              if (isSuccessful){
+                              val user = authViewModel?.signin(email, password)?.await() ?: false
+                              if (user != null){
                                   Toast.makeText(
                                       context,
                                       "Successfully logged in",
@@ -170,11 +176,6 @@ fun LoginComposable(navController: NavController? , authViewModel: AuthViewModel
                 onClick = {navController?.navigate("register")}
             ){
                 Text(text = "New! Register your account" , textDecoration = TextDecoration.Underline)
-            }
-            
-            
-            Button(onClick = { testModle.onSelect() }) {
-                Text(text = "TEst")
             }
         }
 
