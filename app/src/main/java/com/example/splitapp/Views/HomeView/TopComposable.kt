@@ -37,7 +37,6 @@ fun topComposable(){
                     .clip(CircleShape)
             )
 
-
         Image(
             painter = painterResource(id = R.drawable.user),
             contentDescription = stringResource(id = R.string.user_photo),

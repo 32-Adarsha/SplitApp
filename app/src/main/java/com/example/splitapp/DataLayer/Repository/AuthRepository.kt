@@ -1,8 +1,13 @@
 package com.example.splitapp.DataLayer.Repository
 
+import android.nfc.Tag
+import android.util.Log
+import com.example.splitapp.DataLayer.DataModel.Usermodel
 import com.example.splitapp.DataLayer.IRepository.IAuthRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -13,26 +18,35 @@ import javax.inject.Singleton
 class AuthRepository @Inject constructor(
     private val auth:FirebaseAuth
 ) : IAuthRepository {
-    override suspend fun firebaseSignUpWithEmailAndPassword(
+    private val _thisUser = MutableStateFlow<FirebaseUser?>(null)
+    val thisUser = _thisUser.asStateFlow()
+    override fun firebaseSignUpWithEmailAndPassword(
         email: String,
         password: String
-    ): FirebaseUser? {
-        try {
-            auth.createUserWithEmailAndPassword(email, password).await()
-            return auth.currentUser
-        } catch(e:Exception) {
-            return null
-        }
+    ) {
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(){ task ->
+                    if (task.isSuccessful) {
+                        Log.e("Error", "UserCreatedSuccessfully")
+                        _thisUser.value = auth.currentUser
+                    } else{
+                        Log.e("Error", "${task.exception}")
+                    }
+                }
+
     }
 
-    override suspend fun firebaseSignInWithEmailAndPassword(
+    override fun firebaseSignInWithEmailAndPassword(
         email: String, password: String
-    ) :FirebaseUser? {
-        try {
-            auth.signInWithEmailAndPassword(email, password).await()
-            return auth.currentUser
-        } catch (e: Exception) {
-            return null
-        }
+    ) {
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(){ task ->
+                if (task.isSuccessful) {
+                    Log.e("Error", "UserCreatedSuccessfully")
+                    _thisUser.value = auth.currentUser
+                } else{
+                    Log.e("Error", "${task.exception}")
+                }
+            }
     }
 }

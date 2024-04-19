@@ -60,11 +60,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun LoginComposable(navController: NavController? , authViewModel: AuthViewModel ,testModle:DataViewModel) {
 
-
-
-
-    val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
+    val thisUser = authViewModel.thisUser.collectAsState()
     var email by remember {
         mutableStateOf("")
     }
@@ -78,6 +74,11 @@ fun LoginComposable(navController: NavController? , authViewModel: AuthViewModel
 
     var errorMessage by remember {
         mutableStateOf("")
+    }
+
+    if (thisUser.value != null){
+        Log.e("User" , "Why Null is accepted${thisUser.value?.uid}")
+        navController?.navigate("overView")
     }
 
 
@@ -147,27 +148,27 @@ fun LoginComposable(navController: NavController? , authViewModel: AuthViewModel
             Spacer(modifier = Modifier.height(10.dp))
             Button(
                 onClick = {
-                    
-                          coroutineScope.launch {
-                              val user = authViewModel?.signin(email, password)?.await() ?: false
-                              if (user != null){
-                                  Toast.makeText(
-                                      context,
-                                      "Successfully logged in",
-                                      Toast.LENGTH_LONG
-                                  ).show()
-                                  navController?.navigate("overView")
-                              } else
-                              {
-                                  error = true
-                                  errorMessage = "wrong username or password"
-                                  Toast.makeText(
-                                      context,
-                                      "Sign in failed",
-                                      Toast.LENGTH_LONG
-                                  ).show()
-                              }
-                          }
+                    authViewModel.signin(email, password)
+//                          coroutineScope.launch {
+//                              val user = authViewModel?.signin(email, password)?.await() ?: false
+//                              if (user != null){
+//                                  Toast.makeText(
+//                                      context,
+//                                      "Successfully logged in",
+//                                      Toast.LENGTH_LONG
+//                                  ).show()
+//                                  navController?.navigate("overView")
+//                              } else
+//                              {
+//                                  error = true
+//                                  errorMessage = "wrong username or password"
+//                                  Toast.makeText(
+//                                      context,
+//                                      "Sign in failed",
+//                                      Toast.LENGTH_LONG
+//                                  ).show()
+//                              }
+//                          }
                 },
             ) {
                 Text(text = "Sign In")

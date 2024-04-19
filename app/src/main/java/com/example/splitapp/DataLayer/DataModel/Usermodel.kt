@@ -13,10 +13,11 @@ data class GroupId(
 )
 
 data class Usermodel (
+    var id: String?,
     var email: String?,
     var username: String?,
     var first_name: String?,
     var last_name: String?
 ) {
-    constructor() : this(null, null, null, null)
+    constructor() : this(null,null, null, null, null)
 }

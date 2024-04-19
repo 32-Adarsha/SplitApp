@@ -1,24 +1,35 @@
 package com.example.splitapp.DataLayer.DataViewModel
 
 import android.util.Log
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.splitapp.DataLayer.DataModel.Friend
 import com.example.splitapp.DataLayer.DataModel.GroupLog
 import com.example.splitapp.DataLayer.DataModel.GroupModel
+import com.example.splitapp.DataLayer.DataModel.Usermodel
+import com.example.splitapp.DataLayer.Repository.DisplayRepository
+import com.example.splitapp.DataLayer.Repository.GroupRepository
 import com.google.firebase.Firebase
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.database
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import javax.inject.Inject
 
-class SplitViewModel:ViewModel() {
-    private var _allGroup = MutableStateFlow<List<GroupModel>>(emptyList())
-    val allGroup: StateFlow<List<GroupModel>> = _allGroup.asStateFlow()
-    var _friend = MutableStateFlow<MutableList<Friend>>(mutableListOf())
-    val friend :StateFlow<MutableList<Friend>> = _friend.asStateFlow()
+@HiltViewModel
+class SplitViewModel @Inject constructor(
+    private val displayRepository: DisplayRepository,
+    private val groupRepository: GroupRepository,
+):ViewModel() {
+    val allGroup= displayRepository.allGroup
+    val allOwed = displayRepository.allOwed
+    val friend  = displayRepository.allFriends
     val _count = MutableStateFlow<Int>(0)
     val count: StateFlow<Int> = _count.asStateFlow()
     val _viewGroupDetail = MutableStateFlow<Int>(0)
@@ -27,49 +38,34 @@ class SplitViewModel:ViewModel() {
 
 
     init {
-        var listOfriend:MutableList<Friend> = mutableListOf (
-            Friend("Adarsha" , "32" ),
-            Friend("Kiran" , "Kira" ),
-            Friend("Khadka" , "akdahk" ),
-            Friend("Abisha" , "9990" ),
-            Friend("Ghimira" , "45ui" )
-                )
-        _friend.value = listOfriend
-    }
-    fun addGroup(newGroup:GroupModel){
         viewModelScope.launch {
-       try {
-           val gList: List<GroupModel> = _allGroup.value.toMutableList() + newGroup
-           _allGroup.value = gList
-           val c= _count.value+1
-           _count.value = c
-           //
-
-
-       }catch (e:Exception){
-           Log.e("Test" , "${e.message}")
-       }
+            displayRepository.fetchAllFirend()
+        }
+    }
+    suspend fun addGroup(ownerId:String , name:String , description:String, member:List<String>){
+        viewModelScope.launch {
+            groupRepository.createGroup(ownerId , member , name , description)
 
         }
     }
 
-    fun logCount(){
-        Log.e("log" , "${_count.value}")
+    suspend fun addGroupLog(groupId:String  , ownerId: String , involved:Map<String , Float> , name: String, total:Float , description: String){
+        viewModelScope.launch {
+            groupRepository.createGroupLog(groupId ,ownerId , involved , name, total , description)
+        }
     }
-
-    fun selectedGroup(id:Int){
-        val newId = id
-        _viewGroupDetail.value = newId
-    }
-
-    fun postTransaction(id:Int , llog:GroupLog){
-        val test = _allGroup.value
-        test[id].log.add(llog)
-        _allGroup.value = test
+    suspend fun fetchUserGroup(){
+        displayRepository.fetchAllGroup()
     }
 
 
+    fun getUserFromId(id:String):Usermodel?{
+        return friend.value[id]?:null
+    }
 
+    fun getGroupFromID(id:String):GroupModel? {
+        return allGroup.value[id]?:null
+    }
 
 
 }

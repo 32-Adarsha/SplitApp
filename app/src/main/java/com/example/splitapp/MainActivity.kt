@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
     private val viewModel: SplitViewModel by viewModels()
     private val dataViewModel:DataViewModel by viewModels()
     private val authViewModel: AuthViewModel by viewModels()
-    private val allFriendViewModel:AllFriendViewModel by viewModels()
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +60,7 @@ class MainActivity : ComponentActivity() {
                         route  = "auth"
                     ){
                         composable("register"){
-                            SignUpCompose(navController = navController , authViewModel , dataViewModel , allFriendViewModel)
+                            SignUpCompose(navController = navController , authViewModel , dataViewModel )
                         }
                         composable("login"){
                             LoginComposable(navController = navController , authViewModel , dataViewModel)
@@ -78,19 +78,21 @@ class MainActivity : ComponentActivity() {
                                 HomeComposable(navController= navController , viewModel)
                         }
                         composable("createGroup"){
-                                MakeGroupComposable(navController , viewModel)
+                                MakeGroupComposable(navController , viewModel , authViewModel)
                         }
 
                     }
                     navigation (
-                        startDestination = "group",
-                        route = "groupView"
+                        startDestination = "group/{groupId}",
+                        route = "groupView/{groupId}"
                     ){
-                        composable("group"){
-                            GroupOverViewComposable(navController = navController , "Vatmara" , viewModel ,thisId )
+                        composable("group/{groupId}"){ backStackEntry ->
+                            var groupId:String? = backStackEntry.arguments?.getString("groupId")
+                            GroupOverViewComposable(navController = navController ,groupId, viewModel)
                         }
-                        composable("makeTransaction"){
-                            mainTransactionComposable(navController ,viewModel , thisId)
+                        composable("makeTransaction/{groupId}"){ backStackEntry ->
+                            var groupId:String? = backStackEntry.arguments?.getString("groupId")
+                            mainTransactionComposable(navController ,viewModel , groupId!! , authViewModel)
                         }
                     }
                 }

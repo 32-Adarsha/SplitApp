@@ -1,10 +1,8 @@
 package com.example.splitapp.Views.createGroup
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,54 +17,51 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.splitapp.DataLayer.DataModel.Friend
-import com.example.splitapp.DataLayer.DataModel.GroupModel
+import com.example.splitapp.DataLayer.DataViewModel.AuthViewModel
 import com.example.splitapp.DataLayer.DataViewModel.SplitViewModel
 import com.example.splitapp.R
 import com.example.splitapp.Views.GlobalComposable.HeaderComposable
 import com.example.splitapp.Views.GlobalComposable.TopComposable
 import com.example.splitapp.Views.theme.blue32
-import com.example.splitapp.Views.theme.green32
 import com.example.splitapp.Views.theme.orange32
-import com.google.firebase.Firebase
-import com.google.firebase.database.database
+import kotlinx.coroutines.launch
 
 @Composable
 fun MakeGroupComposable (
     navController: NavController,
-    viewModel: SplitViewModel
+    splitViewModel: SplitViewModel,
+    authViewModel: AuthViewModel,
 ) {
-    val database = Firebase.database("https://newtest-50df4-default-rtdb.firebaseio.com/")
-
+    val thisUser = authViewModel.thisUser.collectAsState()
+    val allFriend = splitViewModel.friend.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
-    var member:MutableList<Friend> by remember {
+    var member:MutableList<String> by remember {
         mutableStateOf(mutableListOf())
     }
+
 
     var selectfriend by remember {
         mutableStateOf(false)
     }
 
-    var count by remember {
-        mutableIntStateOf(0)
-    }
+
 
     if (selectfriend){
         Dialog(onDismissRequest = {
@@ -83,9 +78,9 @@ fun MakeGroupComposable (
                         .padding(horizontal = 15.dp)
                         .padding(top = 15.dp, bottom = 5.dp)
                 ) {
-                    AddFriendComposable(viewModel) { friends: MutableList<Friend> ->
+                    AddFriendComposable(splitViewModel) { friends: MutableList<String> ->
                         run {
-                            member = (member + friends).toMutableList()
+                            member = ((member + friends).toMutableList())
                             selectfriend = false
                         }
                     }
@@ -149,7 +144,8 @@ Column (
         modifier = Modifier.weight(1f)
     ) {
         items(member.size){index ->
-            IndividualViewComposable(friend = member[index]) {
+            val user = allFriend.value[member[index]]
+            IndividualViewComposable(user?.username!!, user.first_name!!) {
                 Surface (
                     onClick = ({
                         run {
@@ -165,20 +161,10 @@ Column (
 
 
     Button(onClick = {
-
-
-        var group = GroupModel(name , description , member)
-        try {
-            val groupsRef = database.reference.child("Groups")
-            var groupRef = groupsRef.child("$name")
-            groupRef.setValue(group)
-        } catch (e:Exception){
-            Log.e("string" , "$e")
-        }
-
-        viewModel.addGroup(group)
-                     viewModel.logCount()
-                     navController.popBackStack()
+           coroutineScope.launch {
+               splitViewModel.addGroup(authViewModel.thisUser.value!!.uid , name , description , member)
+           }
+            navController.popBackStack()
     } ,
         modifier = Modifier
             .fillMaxWidth()

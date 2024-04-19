@@ -1,5 +1,6 @@
 package com.example.splitapp.Views
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
@@ -22,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,10 +52,13 @@ import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
 import java.util.UUID
 
+
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun SignUpCompose(navController: NavController? , authViewModel: AuthViewModel? , dataViewModel: DataViewModel? , allFriendViewModel: AllFriendViewModel?) {
+fun SignUpCompose(navController: NavController? , authViewModel: AuthViewModel? , dataViewModel: DataViewModel?) {
     val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
+    val thisUser by authViewModel?.thisUser!!.collectAsState()
+
 
 
     var email by remember {
@@ -73,6 +78,15 @@ fun SignUpCompose(navController: NavController? , authViewModel: AuthViewModel? 
     }
     var logedIn by remember {
         mutableStateOf(false)
+    }
+
+    if(thisUser != null){
+        coroutineScope.launch {
+            var userObj = Usermodel(thisUser!!.uid,email, username, first_name, last_name)
+            dataViewModel?.addSelf(thisUser!!.uid, userObj)
+            Log.e("User", thisUser!!.uid)
+            navController?.navigate("login")
+        }
     }
 
 
@@ -177,24 +191,22 @@ fun SignUpCompose(navController: NavController? , authViewModel: AuthViewModel? 
                 shape = RoundedCornerShape(percent = 20),
             )
             Button(onClick = {
+                    authViewModel?.signup(email, password)
 
-                coroutineScope.launch {
+//                    if (user != null) {
+//                        var userObj= Usermodel(email , username ,first_name , last_name)
+//                        dataViewModel?.addSelf(user.uid , userObj)
+//                        Log.e("User", user.uid)
+//                        navController?.navigate("login")
+//                    } else {
+//                        Toast.makeText(
+//                            context,
+//                            "Sign up failed",
+//                            Toast.LENGTH_LONG
+//                        ).show()
+//                    }
+//                    allFriendViewModel?.seeAllFriend()
 
-                    val user: FirebaseUser? = authViewModel?.signup(email, password)?.await()?:null
-                    if (user != null) {
-                        var userObj= Usermodel(email , username ,first_name , last_name)
-                        dataViewModel?.addSelf(user.uid , userObj)
-                        Log.e("User", user.uid)
-                        navController?.navigate("login")
-                    } else {
-                        Toast.makeText(
-                            context,
-                            "Sign up failed",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                    allFriendViewModel?.seeAllFriend()
-                }
             }, shape = RoundedCornerShape(percent = 20), modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 15.dp)) {
@@ -213,5 +225,5 @@ fun SignUpCompose(navController: NavController? , authViewModel: AuthViewModel? 
 @Preview
 @Composable
 fun PreviewSignUPCompose() {
-    SignUpCompose(null ,null  , null , null)
+    SignUpCompose(null ,null  , null)
 }

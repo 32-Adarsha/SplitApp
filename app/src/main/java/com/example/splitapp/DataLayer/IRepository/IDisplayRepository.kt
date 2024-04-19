@@ -3,16 +3,11 @@ package com.example.splitapp.DataLayer.IRepository
 
 import com.example.splitapp.DataLayer.DataModel.Usermodel
 import com.google.firebase.database.DatabaseReference
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
-//interface IDisplayRepository {
-//
-//}
+interface IDisplayRepository {
 
-//interface IUserDataRepository {
-//
-//    var userRef: DatabaseReference?
-//    suspend fun addSelf(id:String , usermodel: Usermodel) : Boolean
-//    suspend fun addFriend(id:String?):Boolean
-//    suspend fun addGroup (id:String?):Boolean
-//
-//}
+    suspend fun fetchAllFirend()
+}
+

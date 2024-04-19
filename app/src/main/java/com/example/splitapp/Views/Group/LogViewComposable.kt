@@ -48,12 +48,12 @@ fun LogViewComposable(viewModel: SplitViewModel , id:Int){
             .padding(top = 10.dp)
     ){
 
-        LazyColumn(){
-            val myItems = allGroup[id].log
-            items(myItems.size){index ->
-                LogCardComposable(myItems[index].name)
-            }
-        }
+//        LazyColumn(){
+//            val myItems = allGroup[id].log
+//            items(myItems.size){index ->
+//                LogCardComposable(myItems[index].name)
+//            }
+//        }
 
     }
 }

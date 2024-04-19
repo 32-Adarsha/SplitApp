@@ -1,67 +1,50 @@
 package com.example.splitapp.Views.Group
 
+
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-
-
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.splitapp.DataLayer.DataModel.GroupId
+import com.example.splitapp.DataLayer.DataModel.GroupModel
+import com.example.splitapp.DataLayer.DataModel.Usermodel
 import com.example.splitapp.DataLayer.DataViewModel.SplitViewModel
 import com.example.splitapp.R
 import com.example.splitapp.Views.GlobalComposable.HeaderComposable
 import com.example.splitapp.Views.GlobalComposable.TopComposable
 import com.example.splitapp.Views.HomeView.BottomComposable
-import com.example.splitapp.Views.login.LoginComposable
-
 import com.example.splitapp.Views.theme.blue32
 import com.example.splitapp.Views.theme.green32
 import com.example.splitapp.Views.theme.orange32
 import com.example.splitapp.Views.theme.white33
-import kotlinx.coroutines.flow.collect
-
-
-
 
 
 @Composable
-fun GroupOverViewComposable (navController: NavController? , name: String, viewModel: SplitViewModel , id:Int) {
-
+fun GroupOverViewComposable (navController: NavController? , groupId: String?, splitViewModel: SplitViewModel) {
+    val thisGroup:GroupModel? = splitViewModel.getGroupFromID(groupId!!)
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween,
@@ -72,9 +55,9 @@ fun GroupOverViewComposable (navController: NavController? , name: String, viewM
                 .padding(horizontal = 10.dp, vertical = 10.dp)
         ) {
             TopComposable(navController)
-            HeaderComposable(title = name)
+            HeaderComposable(title = thisGroup?.name!!)
             Spacer(modifier = Modifier.height(50.dp))
-            GroupMidTopComposable(viewModel , id)
+            GroupMidTopComposable(splitViewModel , thisGroup.member!!)
             Spacer(modifier = Modifier.height(30.dp))
             Text(
                 text = "Transaction",
@@ -89,9 +72,9 @@ fun GroupOverViewComposable (navController: NavController? , name: String, viewM
                     .weight(1f)
                     .background(Color.Transparent),
                 ) {
-                LogViewComposable(viewModel , id)
+                LogViewComposable(splitViewModel , 1)
             }
-            BottomComposable(navController = navController , path = "makeTransaction")
+            BottomComposable(navController = navController , path = "makeTransaction/${thisGroup.id}")
         }
     }
 
@@ -101,8 +84,8 @@ fun GroupOverViewComposable (navController: NavController? , name: String, viewM
 
 
 @Composable
-fun GroupMidTopComposable(viewModel: SplitViewModel , id: Int){
-    val group by viewModel.allGroup.collectAsState()
+fun GroupMidTopComposable(splitViewModel: SplitViewModel , member:List<String>){
+    val group by splitViewModel.allGroup.collectAsState()
     LazyRow(
         modifier = Modifier.padding(horizontal = 5.dp),
         horizontalArrangement = Arrangement.SpaceBetween
@@ -124,23 +107,25 @@ fun GroupMidTopComposable(viewModel: SplitViewModel , id: Int){
                         modifier = Modifier.padding(20.dp), tint = blue32
                     )
                 }
-                Spacer(modifier = Modifier.height(15.dp))
-                Text(text = "Add" , fontSize =  20.sp , fontWeight = FontWeight.Bold , color = orange32)
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(text = "Add" , fontSize =  15.sp , fontWeight = FontWeight.Bold , color = orange32)
 
 
             }
         }
-        val f = group[id].member
-        items(f.size){index ->
-            val entry = f[index]
-            friendViewComposable(entry.name)
+
+        if (member != null) {
+            items(member.size){index ->
+                val entry:Usermodel? = splitViewModel.getUserFromId(member[index])
+                friendViewComposable(name = entry?.username)
+            }
         }
     }
 
 }
 
 @Composable
-fun friendViewComposable(name:String , owes:Float = 0f){
+fun friendViewComposable(name:String? , owes:Float = 0f){
     Column (
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -155,8 +140,8 @@ fun friendViewComposable(name:String , owes:Float = 0f){
 
         }
         Spacer(modifier = Modifier.height(2.dp))
-        Text(text = name, fontSize =  20.sp , fontWeight = FontWeight.Bold , color = blue32)
-//        Text(text = "$${owes.toString()}" , fontSize =  15.sp , fontWeight = FontWeight.Bold , color = green32)
+        Text(text = name!!, fontSize =  20.sp , fontWeight = FontWeight.Bold , color = blue32)
+        Text(text = "$$owes" , fontSize =  15.sp , fontWeight = FontWeight.Bold , color = green32)
     }
 }
 
@@ -166,26 +151,4 @@ fun friendViewComposable(name:String , owes:Float = 0f){
 
 
 
-// Only Preview After This
 
-
-
-//@Preview(name = "Friend")
-//@Composable
-//fun PreviewfriendView(){
-//    friendViewComposable(name = "Adarsha", owes = 5.0f)
-//}
-
-//@Preview(name = "MidComposable")
-//@Composable
-//fun PreviewGroupMidComposable(){
-//
-//    GroupMidTopComposable( friend)
-//}
-//
-
-//@Preview
-//@Composable
-//fun previewGroupOverViewComposable (){
-//    GroupOverViewComposable(null,"Vatmara" , null , 0)
-//}
