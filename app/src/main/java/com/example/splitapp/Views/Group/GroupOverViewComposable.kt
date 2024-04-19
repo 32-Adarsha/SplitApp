@@ -23,6 +23,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -61,9 +63,9 @@ fun GroupOverViewComposable (navController: NavController? , groupId: String?, s
             Spacer(modifier = Modifier.height(30.dp))
             Text(
                 text = "Transaction",
-                fontSize = 30.sp,
+                fontSize = 35.sp,
                 fontWeight = FontWeight.Bold,
-                fontStyle = FontStyle.Italic,
+                fontFamily = FontFamily(Font(R.font.headingfont)),
                 color = blue32,
                 modifier = Modifier.padding(horizontal = 20.dp)
             )
@@ -72,7 +74,7 @@ fun GroupOverViewComposable (navController: NavController? , groupId: String?, s
                     .weight(1f)
                     .background(Color.Transparent),
                 ) {
-                LogViewComposable(splitViewModel , 1)
+                LogViewComposable(splitViewModel , groupId)
             }
             BottomComposable(navController = navController , path = "makeTransaction/${thisGroup.id}")
         }

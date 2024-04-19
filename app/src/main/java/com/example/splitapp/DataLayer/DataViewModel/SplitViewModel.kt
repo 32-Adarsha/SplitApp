@@ -29,6 +29,7 @@ class SplitViewModel @Inject constructor(
 ):ViewModel() {
     val allGroup= displayRepository.allGroup
     val allOwed = displayRepository.allOwed
+    val allGroupLog = displayRepository.allLog
     val friend  = displayRepository.allFriends
     val _count = MutableStateFlow<Int>(0)
     val count: StateFlow<Int> = _count.asStateFlow()
@@ -61,6 +62,10 @@ class SplitViewModel @Inject constructor(
 
     fun getUserFromId(id:String):Usermodel?{
         return friend.value[id]?:null
+    }
+
+    fun getGroupLog(id:String):List<GroupLog>?{
+        return allGroupLog.value[id]?:null
     }
 
     fun getGroupFromID(id:String):GroupModel? {

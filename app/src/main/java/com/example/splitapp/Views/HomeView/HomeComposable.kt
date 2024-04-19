@@ -33,15 +33,13 @@ fun HomeComposable(navController: NavController? , splitViewModel: SplitViewMode
                 .padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            MoneyComposable()
+            MoneyViewer()
             GroupComposable(navController = navController ,splitViewModel)
 
         }
     }
 }
 
-//@Preview
-//@Composable
-//fun PreviewScaffold(){
-//    HomeComposable(null)
-//}
+
+
+

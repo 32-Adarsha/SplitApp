@@ -276,8 +276,6 @@ fun mainTransactionComposable(navController: NavController,splitViewModel: Split
         }
     }
 
-
-
         if (isSlectingFriend) {
             Dialog(onDismissRequest = { /*TODO*/ }) {
 

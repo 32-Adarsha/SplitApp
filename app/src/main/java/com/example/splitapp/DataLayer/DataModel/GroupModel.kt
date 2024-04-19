@@ -33,14 +33,16 @@ data class Friend (
 )
 
 data class GroupLog (
-    val id : String,
-    val owner:String,
-    val name : String,
-    val total : Float,
-    val description: String,
-    val dateCreate: String,
-    val involved: Map<String , Float>
-)
+    val id : String?,
+    val owner:String?,
+    val name : String?,
+    val total : Float?,
+    val description: String?,
+    val dateCreate: String?,
+    val involved: Map<String , Float>?
+) {
+    constructor():this(null , null , null , null , null , null , null)
+}
 
 
 

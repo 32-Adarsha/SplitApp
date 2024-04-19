@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,17 +26,11 @@ fun topComposable(){
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp , vertical = 20.dp)
+            .padding(horizontal = 13.dp, vertical = 15.dp)
     ){
-
-            Image(
-                painter = painterResource(id = R.drawable.setting),
-                contentDescription = "Setting",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(34.dp)
-                    .clip(CircleShape)
-            )
+            Icon(painter = painterResource(id = R.drawable.setting), contentDescription = "Setting",modifier = Modifier
+                .size(34.dp)
+                .clip(CircleShape),)
 
         Image(
             painter = painterResource(id = R.drawable.user),

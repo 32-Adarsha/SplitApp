@@ -4,6 +4,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,9 +29,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.splitapp.DataLayer.DataModel.GroupLog
+import com.example.splitapp.DataLayer.DataModel.Usermodel
 import com.example.splitapp.DataLayer.DataViewModel.SplitViewModel
 import com.example.splitapp.Views.theme.blue32
 import com.example.splitapp.Views.theme.orange32
@@ -38,8 +42,8 @@ import com.example.splitapp.Views.theme.white33
 
 
 @Composable
-fun LogViewComposable(viewModel: SplitViewModel , id:Int){
-    val allGroup by viewModel.allGroup.collectAsState()
+fun LogViewComposable(splitViewModel: SplitViewModel , id:String){
+    var allLog  = splitViewModel.allGroupLog.collectAsState().value[id]
     Surface (
 
         modifier = Modifier
@@ -48,12 +52,14 @@ fun LogViewComposable(viewModel: SplitViewModel , id:Int){
             .padding(top = 10.dp)
     ){
 
-//        LazyColumn(){
-//            val myItems = allGroup[id].log
-//            items(myItems.size){index ->
-//                LogCardComposable(myItems[index].name)
-//            }
-//        }
+        LazyColumn(){
+
+            if (allLog != null) {
+                items(allLog.size){ index ->
+                    LogCardComposable(allLog[index] ,splitViewModel)
+                }
+            }
+        }
 
     }
 }
@@ -61,7 +67,8 @@ fun LogViewComposable(viewModel: SplitViewModel , id:Int){
 
 
 @Composable
-fun LogCardComposable(name:String){
+fun LogCardComposable(gLog:GroupLog , splitViewModel: SplitViewModel){
+    var user = splitViewModel.getUserFromId(gLog.owner!!)
     var expanded by remember {
         mutableStateOf(false)
     }
@@ -94,13 +101,13 @@ fun LogCardComposable(name:String){
 
                 ) {
                     Text(
-                        text = name,
+                        text = gLog.name!!,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
                         color = blue32
                     )
                     Text(
-                        text = "Adarsha $100",
+                        text = "${user!!.username} posted $${gLog.total}",
                         fontWeight = FontWeight.Medium,
                         fontStyle = FontStyle.Italic,
                         color = orange32
@@ -112,12 +119,27 @@ fun LogCardComposable(name:String){
                     Surface (
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(120.dp)
                             .padding(vertical = 10.dp),
                         shape = RoundedCornerShape(8.dp),
                         border = BorderStroke(1.dp, Color.Black),
                     ) {
-
+                        Column (
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp, vertical = 2.dp)
+                        ) {
+                            Text(text = "${user?.username?.uppercase()} lend" , fontWeight = FontWeight.Medium , fontSize = 22.sp)
+                            gLog.involved!!.forEach { (id,owed) ->
+                                var oUser = splitViewModel.getUserFromId(id)
+                                Row (
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(text = oUser!!.username!! , fontSize = 20.sp , fontWeight = FontWeight.Medium)
+                                    Text(text = "$owed" , fontSize = 18.sp , fontWeight = FontWeight.Bold)
+                                }
+                            }
+                        }
 
                     }
                 }
