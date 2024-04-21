@@ -1,6 +1,7 @@
 package com.example.splitapp.Views.HomeView
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.splitapp.R
@@ -29,24 +31,19 @@ import com.example.splitapp.Views.theme.white32
 import com.example.splitapp.Views.theme.white33
 
 @Composable
-fun BottomComposable (navController: NavController? , path:String ){
+fun BottomComposable (navController: NavController? , path:String? ){
     BottomAppBar(
         containerColor = Color.Transparent,
         contentColor = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.padding(bottom = 5.dp).padding(horizontal = 5.dp)
+        modifier = Modifier.background(color = Color.Black)
     ) {
         Box (
             contentAlignment = Alignment.Center,
 
-            
+
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.bar),
-                contentDescription = stringResource(id = R.string.user_photo),
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier.padding(vertical = 1.dp)
-            )
-            FloatComposable2(navController = navController, navRoute = path )
+
+            FloatComposable2(navController = navController, navRoute = path!! )
             Row (
                 modifier = Modifier
                     .fillMaxHeight()
@@ -90,8 +87,8 @@ fun FloatComposable2 (navController: NavController?, navRoute: String) {
     }
 }
 
-//@Preview
-//@Composable
-//fun PreviewBottomComposable(){
-//    BottomComposable(null)
-//}
+@Preview
+@Composable
+fun PreviewBottomComposable(){
+    BottomComposable(null , "tes")
+}

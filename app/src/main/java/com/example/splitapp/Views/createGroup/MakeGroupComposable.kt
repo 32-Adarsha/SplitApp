@@ -48,13 +48,15 @@ fun MakeGroupComposable (
     authViewModel: AuthViewModel,
 ) {
     val thisUser = authViewModel.thisUser.collectAsState()
-    val allFriend = splitViewModel.friend.collectAsState()
+    val allFriend = splitViewModel.getAllFriend()
     val coroutineScope = rememberCoroutineScope()
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var member:MutableList<String> by remember {
         mutableStateOf(mutableListOf())
     }
+
+
 
 
     var selectfriend by remember {
@@ -78,10 +80,12 @@ fun MakeGroupComposable (
                         .padding(horizontal = 15.dp)
                         .padding(top = 15.dp, bottom = 5.dp)
                 ) {
-                    AddFriendComposable(splitViewModel) { friends: MutableList<String> ->
-                        run {
-                            member = ((member + friends).toMutableList())
-                            selectfriend = false
+                    if (allFriend != null) {
+                        AddFriendComposable(splitViewModel , allFriend) { friends: MutableList<String> ->
+                            run {
+                                member = ((member + friends).toMutableList())
+                                selectfriend = false
+                            }
                         }
                     }
 
@@ -135,16 +139,13 @@ Column (
                 tint = Color.Black,
             )
         }
-        
-
-
 
     }
     LazyColumn(
         modifier = Modifier.weight(1f)
     ) {
         items(member.size){index ->
-            val user = allFriend.value[member[index]]
+            val user = splitViewModel.getUserFromId(member[index])
             IndividualViewComposable(user?.username!!, user.first_name!!) {
                 Surface (
                     onClick = ({

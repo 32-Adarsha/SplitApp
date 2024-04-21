@@ -28,7 +28,7 @@ fun topComposable(){
             .fillMaxWidth()
             .padding(horizontal = 13.dp, vertical = 15.dp)
     ){
-            Icon(painter = painterResource(id = R.drawable.setting), contentDescription = "Setting",modifier = Modifier
+            Icon(painter = painterResource(id = R.drawable.outlinesetting), contentDescription = "Setting",modifier = Modifier
                 .size(34.dp)
                 .clip(CircleShape),)
 

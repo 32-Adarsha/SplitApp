@@ -50,15 +50,18 @@ class SplitViewModel @Inject constructor(
         }
     }
 
-    suspend fun addGroupLog(groupId:String  , ownerId: String , involved:Map<String , Float> , name: String, total:Float , description: String){
+    suspend fun addGroupLog(groupId:String  , ownerId: String , involved:Map<String , Float> , name: String, total:Float , description: String , isSettled:Boolean){
         viewModelScope.launch {
-            groupRepository.createGroupLog(groupId ,ownerId , involved , name, total , description)
+            groupRepository.createGroupLog(groupId ,ownerId , involved , name, total , description , isSettled)
         }
     }
     suspend fun fetchUserGroup(){
         displayRepository.fetchAllGroup()
     }
 
+    fun getGroupMember(id:String): List<String>? {
+        return allGroup.value[id]?.member
+    }
 
     fun getUserFromId(id:String):Usermodel?{
         return friend.value[id]?:null
@@ -68,8 +71,41 @@ class SplitViewModel @Inject constructor(
         return allGroupLog.value[id]?:null
     }
 
+    fun getGroupOwed(id:String):Map<String , Float>? {
+        return allOwed.value[id]
+    }
+
     fun getGroupFromID(id:String):GroupModel? {
         return allGroup.value[id]?:null
+    }
+
+
+    fun getTotalOwedInGroup(id:String):Float {
+        val grouplog = allOwed.value[id]?.toList()
+        var totalOwed:Float = 0f
+        if (grouplog != null){
+            for ((key , value) in grouplog){
+                totalOwed += value
+            }
+        }
+        return  totalOwed
+
+    }
+
+    fun getOverallOwed():Float {
+        var totalOwed = 0f
+        for ((key , value ) in allOwed.value) {
+            totalOwed += getTotalOwedInGroup(key)
+        }
+        return totalOwed
+    }
+
+    fun getAllFriend():List<String>? {
+        var memberList:MutableList<String> = mutableListOf()
+        for((key , value ) in friend.value){
+            memberList.add(key)
+        }
+        return  memberList.toList()
     }
 
 

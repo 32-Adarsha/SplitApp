@@ -70,15 +70,21 @@ class GroupRepository @Inject constructor(
         involved: Map<String, Float>,
         name: String,
         total:Float,
-        description: String
+        description: String,
+        isSettled: Boolean
     ) {
         val mainRef = database.reference
         val newLogId = UUID.randomUUID().toString()
         involved.forEach { (key, value) ->
             val fromRef = mainRef.child("Users/${ownerId}/groups/${groupId}/${key}")
-            LogAddHelper(fromRef  , value)
             val ToRef = mainRef.child("Users/${key}/groups/${groupId}/${ownerId}")
-            LogAddHelper(ToRef , value)
+            if (isSettled) {
+                LogAddHelper(fromRef, -value)
+                LogAddHelper(ToRef, value)
+            } else {
+                LogAddHelper(fromRef, value)
+                LogAddHelper(ToRef, -value)
+            }
         }
         var dateNow = LocalDateTime.now().toString()
         val CreateGroupLog = GroupLog (newLogId , ownerId , name , total, description , dateNow , involved)

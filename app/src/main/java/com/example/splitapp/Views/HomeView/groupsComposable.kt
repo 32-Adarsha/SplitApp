@@ -52,8 +52,8 @@ fun GroupComposable(
     ) {
         Text(
             text = "Groups,",
-            modifier = Modifier,
-            textAlign = TextAlign.Start,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
             fontFamily = FontFamily(Font(R.font.cvfont)),
             fontWeight = FontWeight.SemiBold,
             fontSize = 30.sp,
@@ -72,7 +72,8 @@ fun GroupComposable(
                         modifier = Modifier.padding(top = 5.dp , bottom = 5.dp)
                     ) {
                         val userModel = splitViewModel.getUserFromId(group.owner!!)
-                    OutlinedCardExample(navController, group.name!! , userModel?.username!!,0f)
+                        var owed = splitViewModel.getTotalOwedInGroup(group.id!!)
+                    OutlinedCardExample( group.name!! , userModel?.username!!,owed , 40 )
                     }
 
                 }
@@ -81,70 +82,13 @@ fun GroupComposable(
     }
 }
 
-//@Composable
-//fun GroupCard(navController: NavController? , name:String , owner:String ,owes:Float) {
-//    OutlinedCard(
-//        colors = CardDefaults.cardColors(
-//            containerColor = MaterialTheme.colorScheme.surface,
-//        ),
-//
-//        border = BorderStroke(1.dp, Color.Black),
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .height(100.dp)
-//            .padding(vertical = 5.dp)
-//    ) {
-//        Row (
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .fillMaxHeight()
-//                .padding(horizontal = 15.dp),
-//            verticalAlignment = Alignment.CenterVertically,
-//            horizontalArrangement = Arrangement.SpaceBetween
-//        ) {
-//            Row {
-//                Surface(
-//                    shape = RoundedCornerShape(8.dp),
-//                    border = BorderStroke(1.dp, Color.Black),
-//                    modifier = Modifier.size(70.dp),
-//                    color = green32
-//                ) {
-//
-//                }
-//                Spacer(modifier = Modifier.width(20.dp))
-//                Column {
-//                    Text(
-//                        text = name,
-//                        fontSize = 25.sp,
-//                        fontWeight = FontWeight.Medium,
-//                        color = orange32,
-//                    )
-//                    Text(
-//                        text = owner,
-//                        fontSize = 15.sp,
-//                        fontWeight = FontWeight.Bold,
-//                        color = Color.Gray)
-//                }
-//            }
-//
-//            Text(
-//                text = "$$owes",
-//                fontSize = 20.sp,
-//                color = green32,
-//                fontWeight = FontWeight.Bold,
-//                modifier = Modifier.padding(horizontal = 10.dp).width(50.dp)
-//            )
-//
-//
-//        }
-//
-//        }
-//    }
 @Composable
-fun OutlinedCardExample(navController: NavController? , name:String , owner:String ,owes:Float) {
+fun OutlinedCardExample( name:String , owner:String ,owesamount:Float , moneyFontSize:Int) {
+    var owes = owesamount
     var color: Color = if (owes == 0f) {
         Color.Gray
     } else if (owes < 0f) {
+        owes = -1 * owes
         orange32
     } else {
         green32
@@ -184,11 +128,11 @@ fun OutlinedCardExample(navController: NavController? , name:String , owner:Stri
             Text(
                 text = "$$owes",
                 modifier = Modifier.fillMaxWidth()
-                    .padding( start = 16.dp , end = 16.dp)
-                    .alpha(0.7f),
+                    .padding( start = 16.dp , end = 16.dp),
+
                 textAlign = TextAlign.End,
                 fontFamily = FontFamily(Font(R.font.dmfont)),
-                fontSize = 50.sp,
+                fontSize = moneyFontSize.sp,
                 color = color,
 
 

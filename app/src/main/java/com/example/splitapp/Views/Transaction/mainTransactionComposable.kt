@@ -1,5 +1,6 @@
 package com.example.splitapp.Views.Transaction
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -61,6 +62,7 @@ enum class Transaction {
     SettleUp,
     DivideExpense
 }
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun mainTransactionComposable(navController: NavController,splitViewModel: SplitViewModel , id:String ,authViewModel: AuthViewModel) {
     var owner = authViewModel.thisUser
@@ -88,6 +90,10 @@ fun mainTransactionComposable(navController: NavController,splitViewModel: Split
     var total by remember {
         mutableStateOf("")
     }
+
+    var memberChoice = splitViewModel.getGroupMember(id)?.toMutableList()
+    memberChoice?.remove(owner.value!!.uid)
+
 
     var isSettle = if (typeTransaction == Transaction.SettleUp) true else false
     var isDivide = if (typeTransaction == Transaction.DivideExpense) true else false
@@ -261,7 +267,7 @@ fun mainTransactionComposable(navController: NavController,splitViewModel: Split
         Button(
             onClick = {
                 coroutineScope.launch {
-                    splitViewModel.addGroupLog(id,owner.value!!.uid ,member,name,total.toFloat(),description)
+                    splitViewModel.addGroupLog(id,owner.value!!.uid ,member,name,total.toFloat(),description , isSettle)
                 }
 
                 navController.popBackStack()
@@ -290,15 +296,17 @@ fun mainTransactionComposable(navController: NavController,splitViewModel: Split
                             .padding(horizontal = 15.dp)
                             .padding(top = 15.dp, bottom = 5.dp)
                     ) {
-                        AddFriendComposable(splitViewModel) { friends: MutableList<String> ->
-                            run {
-                                var tempMap = member.toMutableMap()
-                                for(indivi in friends){
-                                    tempMap[indivi] = 0f
+                        if (memberChoice != null) {
+                            AddFriendComposable(splitViewModel , memberChoice) { friends: MutableList<String> ->
+                                run {
+                                    var tempMap = member.toMutableMap()
+                                    for(indivi in friends){
+                                        tempMap[indivi] = 0f
+                                    }
+                                    member = tempMap.toMap()
+                    //
+                                    isSlectingFriend = !isSlectingFriend
                                 }
-                                member = tempMap.toMap()
-//
-                                isSlectingFriend = !isSlectingFriend
                             }
                         }
                     }

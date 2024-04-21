@@ -1,11 +1,9 @@
 package com.example.splitapp.Views.createGroup
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,24 +25,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.splitapp.DataLayer.DataModel.Usermodel
 import com.example.splitapp.DataLayer.DataViewModel.SplitViewModel
-import com.example.splitapp.Views.login.CustomInput
 import com.example.splitapp.R
+import com.example.splitapp.Views.login.CustomInput
 import com.example.splitapp.Views.theme.green32
-
-
-
 
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
-fun AddFriendComposable(splitViewModel: SplitViewModel, onAdd: (MutableList<String>) -> Unit) {
+fun AddFriendComposable(splitViewModel: SplitViewModel, memberChoice:List<String>,onAdd: (MutableList<String>) -> Unit) {
     var search by remember {
         mutableStateOf("")
     }
-
-
 
         Column(
             modifier = Modifier
@@ -56,8 +48,7 @@ fun AddFriendComposable(splitViewModel: SplitViewModel, onAdd: (MutableList<Stri
                 onchange = { value -> search = value },
                 svgId = R.drawable.search)
             Spacer(modifier = Modifier.height(5.dp))
-            selectedFriend2(splitViewModel , onAdd)
-
+            selectedFriend2(splitViewModel , memberChoice , onAdd)
 
         }
 
@@ -66,11 +57,11 @@ fun AddFriendComposable(splitViewModel: SplitViewModel, onAdd: (MutableList<Stri
 
 
 @Composable
-fun selectedFriend2(splitViewModel: SplitViewModel,  onAdd:(MutableList<String>)-> Unit){
+fun selectedFriend2(splitViewModel: SplitViewModel,memberChoice: List<String>,  onAdd:(MutableList<String>)-> Unit){
     var friendToAdd:MutableList<String> by remember {
         mutableStateOf(mutableListOf())
     }
-    val allFriend by splitViewModel.friend.collectAsState()
+
     Surface (
         shape = RoundedCornerShape(20.dp),
         modifier = Modifier
@@ -81,9 +72,10 @@ fun selectedFriend2(splitViewModel: SplitViewModel,  onAdd:(MutableList<String>)
             LazyColumn(
                 modifier = Modifier.weight(1f)
             ) {
-                val f = allFriend.toList()
+                var f = memberChoice
                 items(f.size) { index ->
-                    var (key , userModel) = f[index]
+                    var key  =  f[index]
+                    var userModel = splitViewModel.getUserFromId(key)
                     var isChecked by remember {
                         mutableStateOf(false)
                     }
@@ -114,7 +106,7 @@ fun selectedFriend2(splitViewModel: SplitViewModel,  onAdd:(MutableList<String>)
                     ) {
 
 
-                        IndividualViewComposable(userModel.username!!, userModel.first_name!!){
+                        IndividualViewComposable(userModel?.username!!, userModel.first_name!!){
                             Icon(painter = painterResource(id = R.drawable.check), contentDescription = "Delete", modifier = Modifier.size(25.dp) , tint = BorderColor )
                         }
 
@@ -136,20 +128,4 @@ fun selectedFriend2(splitViewModel: SplitViewModel,  onAdd:(MutableList<String>)
 }
 
 
-@Composable
-fun CustomTest(f : Map<String , Usermodel>){
-    Log.e("Test" , "$f")
-}
 
-//@Preview
-//@Composable
-//fun PreviewselectedFriend(){
-//    selectedFriend()
-//}
-//
-//
-//@Preview
-//@Composable
-//fun PreviewfriendComposable(){
-//    AddFriendComposable()
-//}

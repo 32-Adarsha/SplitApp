@@ -45,7 +45,7 @@ fun TopComposable(navController: NavController?) {
 
                 Icon(
 
-                    painter = painterResource(id = R.drawable.setting),
+                    painter = painterResource(id = R.drawable.outlinesetting),
                     contentDescription = "backArrow",
                     modifier = Modifier.size(30.dp),
                     tint = orange32

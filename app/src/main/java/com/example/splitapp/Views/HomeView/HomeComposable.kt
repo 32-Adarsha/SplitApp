@@ -33,7 +33,7 @@ fun HomeComposable(navController: NavController? , splitViewModel: SplitViewMode
                 .padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            MoneyViewer()
+            MoneyViewer(splitViewModel.getOverallOwed())
             GroupComposable(navController = navController ,splitViewModel)
 
         }
