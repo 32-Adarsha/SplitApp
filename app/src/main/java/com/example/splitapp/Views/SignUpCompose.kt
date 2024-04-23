@@ -58,9 +58,6 @@ import java.util.UUID
 fun SignUpCompose(navController: NavController? , authViewModel: AuthViewModel? , dataViewModel: DataViewModel?) {
     val coroutineScope = rememberCoroutineScope()
     val thisUser by authViewModel?.thisUser!!.collectAsState()
-
-
-
     var email by remember {
          mutableStateOf("")
     }
@@ -82,9 +79,8 @@ fun SignUpCompose(navController: NavController? , authViewModel: AuthViewModel? 
 
     if(thisUser != null){
         coroutineScope.launch {
-            var userObj = Usermodel(thisUser!!.uid,email, username, first_name, last_name)
+            var userObj = Usermodel(thisUser!!.uid,email,null,null ,username, first_name, last_name)
             dataViewModel?.addSelf(thisUser!!.uid, userObj)
-            Log.e("User", thisUser!!.uid)
             navController?.navigate("login")
         }
     }

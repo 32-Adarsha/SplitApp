@@ -45,5 +45,12 @@ data class GroupLog (
 }
 
 
+data class ServerResoponse (
+    var isSuccess:Boolean = false,
+    var userModel:Usermodel? = null,
+) {
+    constructor():this(false , null)
+}
+
 
 

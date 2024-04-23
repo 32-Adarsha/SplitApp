@@ -5,6 +5,7 @@ import com.example.splitapp.DataLayer.Repository.AuthRepository
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.database.FirebaseDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,5 +25,5 @@ object MainModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(auth: FirebaseAuth): IAuthRepository = AuthRepository(auth)
+    fun provideAuthRepository(auth: FirebaseAuth , database: FirebaseDatabase): IAuthRepository = AuthRepository(auth , database)
 }

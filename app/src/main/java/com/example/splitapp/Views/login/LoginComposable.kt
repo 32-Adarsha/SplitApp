@@ -1,11 +1,7 @@
 package com.example.splitapp.Views.login
 
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,12 +17,9 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -36,17 +29,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -55,7 +44,6 @@ import com.example.splitapp.DataLayer.DataViewModel.DataViewModel
 import com.example.splitapp.R
 import com.example.splitapp.Views.theme.green32
 import com.example.splitapp.Views.theme.orange32
-import kotlinx.coroutines.launch
 
 @Composable
 fun LoginComposable(navController: NavController? , authViewModel: AuthViewModel ,testModle:DataViewModel) {
@@ -77,7 +65,6 @@ fun LoginComposable(navController: NavController? , authViewModel: AuthViewModel
     }
 
     if (thisUser.value != null){
-        Log.e("User" , "Why Null is accepted${thisUser.value?.uid}")
         navController?.navigate("overView")
     }
 
@@ -149,26 +136,6 @@ fun LoginComposable(navController: NavController? , authViewModel: AuthViewModel
             Button(
                 onClick = {
                     authViewModel.signin(email, password)
-//                          coroutineScope.launch {
-//                              val user = authViewModel?.signin(email, password)?.await() ?: false
-//                              if (user != null){
-//                                  Toast.makeText(
-//                                      context,
-//                                      "Successfully logged in",
-//                                      Toast.LENGTH_LONG
-//                                  ).show()
-//                                  navController?.navigate("overView")
-//                              } else
-//                              {
-//                                  error = true
-//                                  errorMessage = "wrong username or password"
-//                                  Toast.makeText(
-//                                      context,
-//                                      "Sign in failed",
-//                                      Toast.LENGTH_LONG
-//                                  ).show()
-//                              }
-//                          }
                 },
             ) {
                 Text(text = "Sign In")
@@ -229,9 +196,4 @@ fun CustomInput(passedValue : String , onchange : (String) -> Unit, svgId :Int){
     }
 }
 
-//@Preview
-//@Composable
-//fun PreviewLogin(){
-//
-//    LoginComposable(null)
-//}
+

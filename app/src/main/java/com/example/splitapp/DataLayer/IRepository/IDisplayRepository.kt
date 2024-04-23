@@ -8,6 +8,6 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface IDisplayRepository {
 
-    suspend fun fetchAllFirend()
+    suspend fun fetchAllFirend(id:String)
 }
 

@@ -1,32 +1,30 @@
 package com.example.splitapp.DataLayer.DataViewModel
 
-import android.util.Log
-import androidx.compose.runtime.rememberUpdatedState
+import android.provider.ContactsContract.CommonDataKinds.Email
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.splitapp.DataLayer.DataModel.Friend
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.splitapp.DataLayer.DataModel.GroupLog
 import com.example.splitapp.DataLayer.DataModel.GroupModel
 import com.example.splitapp.DataLayer.DataModel.Usermodel
+import com.example.splitapp.DataLayer.Repository.AuthRepository
 import com.example.splitapp.DataLayer.Repository.DisplayRepository
 import com.example.splitapp.DataLayer.Repository.GroupRepository
-import com.google.firebase.Firebase
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.database
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
 class SplitViewModel @Inject constructor(
     private val displayRepository: DisplayRepository,
     private val groupRepository: GroupRepository,
+    private val authRepository: AuthRepository
 ):ViewModel() {
+
     val allGroup= displayRepository.allGroup
     val allOwed = displayRepository.allOwed
     val allGroupLog = displayRepository.allLog
@@ -35,14 +33,17 @@ class SplitViewModel @Inject constructor(
     val count: StateFlow<Int> = _count.asStateFlow()
     val _viewGroupDetail = MutableStateFlow<Int>(0)
     val viewGroupDetail = _viewGroupDetail.asStateFlow()
+    val thisUser = authRepository.thisUser
 
 
 
     init {
         viewModelScope.launch {
-            displayRepository.fetchAllFirend()
+
         }
     }
+
+
     suspend fun addGroup(ownerId:String , name:String , description:String, member:List<String>){
         viewModelScope.launch {
             groupRepository.createGroup(ownerId , member , name , description)
@@ -106,6 +107,13 @@ class SplitViewModel @Inject constructor(
             memberList.add(key)
         }
         return  memberList.toList()
+    }
+
+
+    suspend fun searchFriend(email: String): Usermodel? {
+        return viewModelScope.async {
+            displayRepository.fetchTheUserFromEmail(email)
+        }.await()
     }
 
 
