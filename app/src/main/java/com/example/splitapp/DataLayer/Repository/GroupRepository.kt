@@ -1,14 +1,17 @@
 package com.example.splitapp.DataLayer.Repository
 
+import com.example.splitapp.DataLayer.DataModel.GroupId
 import com.example.splitapp.DataLayer.DataModel.GroupInfo
 import com.example.splitapp.DataLayer.DataModel.GroupLog
 import com.example.splitapp.DataLayer.DataModel.GroupModel
+import com.example.splitapp.DataLayer.DataModel.Usermodel
 import com.example.splitapp.DataLayer.IRepository.IGroupRepository
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.getValue
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.Date
@@ -23,22 +26,23 @@ class GroupRepository @Inject constructor(
     private val authRepository: AuthRepository
 ):IGroupRepository {
 
-//    private val _allGroup = MutableStateFlow<List<>>(emptyList())
-//    val allGroup = _allGroup.asStateFlow()
-    override suspend fun createGroup(ownerId:String , members:List<String>,name:String , description:String ){
+
+    override suspend fun createGroup(ownerId:String , members:List<Usermodel>?,name:String , description:String ){
         val mainRef = database.reference
 
         val newGroupId = UUID.randomUUID().toString()
-        val newGroup = GroupModel(newGroupId , name , description ,ownerId , members)
-        var mapOfowes:MutableMap<String,Float> = mutableMapOf()
-        for (member in members){
-            mapOfowes[member] = 0f
-        }
-        for(member in members){
-            mainRef.child("Users/$member").child("groups").child(newGroupId).setValue(mapOfowes)
-        }
+        val newGroup = GroupModel(newGroupId , name , description ,ownerId , listOf(ownerId))
 
-        mainRef.child("Groups").child("$newGroupId").setValue(newGroup)
+    if (members != null) {
+        for(member in members){
+            var newInviteRef  = mainRef.child("Users/${member.id}").child("groupInvitation")
+            newInviteRef.child(newGroupId).setValue(true)
+        }
+    }
+
+    mainRef.child("Groups").child("$newGroupId").setValue(newGroup)
+
+    mainRef.child("Users/$ownerId").child("Groups").child(newGroupId).child("$ownerId").setValue(0)
 
     }
 
@@ -76,11 +80,11 @@ class GroupRepository @Inject constructor(
         val mainRef = database.reference
         val newLogId = UUID.randomUUID().toString()
         involved.forEach { (key, value) ->
-            val fromRef = mainRef.child("Users/${ownerId}/groups/${groupId}/${key}")
-            val ToRef = mainRef.child("Users/${key}/groups/${groupId}/${ownerId}")
+            val fromRef = mainRef.child("Users/${ownerId}/Groups/${groupId}/${key}")
+            val ToRef = mainRef.child("Users/${key}/Groups/${groupId}/${ownerId}")
             if (isSettled) {
-                LogAddHelper(fromRef, -value)
-                LogAddHelper(ToRef, value)
+                LogAddHelper(fromRef, value)
+                LogAddHelper(ToRef, -value)
             } else {
                 LogAddHelper(fromRef, value)
                 LogAddHelper(ToRef, -value)
@@ -91,6 +95,45 @@ class GroupRepository @Inject constructor(
         mainRef.child("Logs").child("${groupId}").child(newLogId).setValue(CreateGroupLog)
 
     }
+
+
+    suspend fun acceptGroupRequest(userId:String , groupId: String){
+        var groupRef = database.reference.child("Groups/$groupId/member")
+        groupRef.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (data in snapshot.children){
+                    var eachMemberId = data.getValue(String::class.java)
+                    database.reference.child("Users/${eachMemberId}/Groups/${groupId}").child("$userId").setValue(0f)
+                    database.reference.child("Users/${userId}/Groups/${groupId}").child("$eachMemberId").setValue(0f)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+        var memberref = database.reference.child("Groups/$groupId/member")
+        memberref.addListenerForSingleValueEvent(object :ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var listOfMember = snapshot.value as? List<String>?: null
+                var newList = listOfMember?.toMutableList()
+                newList?.add(userId)
+                memberref.setValue(newList?.toList())
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+        database.reference.child("Users/$userId/groupInvitation").child("$groupId").removeValue()
+
+
+    }
+
+
 
 
 }

@@ -22,19 +22,33 @@ class AuthRepository @Inject constructor(
 ) : IAuthRepository {
     private val _thisUser = MutableStateFlow<FirebaseUser?>(null)
     val thisUser = _thisUser.asStateFlow()
+    private val _thisAttempS = MutableStateFlow<Int>(0)
+    var attempt  = _thisAttempS.asStateFlow()
+    private val _thisAttemp = MutableStateFlow<Int>(0)
+    var attempt2  = _thisAttemp.asStateFlow()
+    private val _loading = MutableStateFlow<Boolean>(false)
+    var loading  = _loading.asStateFlow()
+    private var _error = MutableStateFlow<String?>(null)
+    var error = _error.asStateFlow()
+    private val _loading2 = MutableStateFlow<Boolean>(false)
+    var loading2  = _loading2.asStateFlow()
+    private var _error2 = MutableStateFlow<String?>(null)
+    var error2 = _error2.asStateFlow()
+
     override fun firebaseSignUpWithEmailAndPassword(
         email: String,
         password: String
     ) {
+        _loading2.value = true
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(){ task ->
                     if (task.isSuccessful) {
-                        Log.e("Error", "UserCreatedSuccessfully")
                         _thisUser.value = auth.currentUser
                         val newEmail = email.replace("." , "")
                         database.reference.child("AllUser").child("$newEmail").setValue(thisUser.value?.uid)
                     } else{
-                        Log.e("Error", "${task.exception}")
+                        _error2.value = task.exception?.message.toString()
+                        _loading2.value = false
                     }
                 }
 
@@ -42,14 +56,17 @@ class AuthRepository @Inject constructor(
 
     override fun firebaseSignInWithEmailAndPassword(
         email: String, password: String
-    ) {
+    ){
+        _loading.value = true
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(){ task ->
                 if (task.isSuccessful) {
                     Log.e("Error", "UserCreatedSuccessfully")
                     _thisUser.value = auth.currentUser
+                    _loading.value = false
                 } else{
-                    Log.e("Error", "${task.exception}")
+                    _error.value = task.exception?.message.toString()
+                    _loading.value = false
                 }
             }
     }

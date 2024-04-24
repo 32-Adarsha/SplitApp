@@ -1,10 +1,12 @@
 package com.example.splitapp.Views.createGroup
 
+import FriendRequestComposable
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -32,6 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
+import com.example.splitapp.DataLayer.DataModel.GroupModel
+import com.example.splitapp.DataLayer.DataModel.Usermodel
 import com.example.splitapp.DataLayer.DataViewModel.AuthViewModel
 import com.example.splitapp.DataLayer.DataViewModel.SplitViewModel
 import com.example.splitapp.R
@@ -48,125 +52,88 @@ fun MakeGroupComposable (
     authViewModel: AuthViewModel,
 ) {
     val thisUser = authViewModel.thisUser.collectAsState()
-    val allFriend = splitViewModel.getAllFriend()
+
     val coroutineScope = rememberCoroutineScope()
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
-    var member:MutableList<String> by remember {
-        mutableStateOf(mutableListOf())
+    var member:MutableSet<Usermodel> by remember {
+        mutableStateOf(mutableSetOf())
     }
 
 
 
-
-    var selectfriend by remember {
-        mutableStateOf(false)
-    }
-
-
-
-    if (selectfriend){
-        Dialog(onDismissRequest = {
-
-        }) {
-            Surface(
-                modifier = Modifier.padding(horizontal = 5.dp , vertical = 15.dp),
-                shape = RoundedCornerShape(20.dp),
-                border = BorderStroke(1.dp, Color.Black),
-
-                ) {
-                Column(
-                    modifier = Modifier
-                        .padding(horizontal = 15.dp)
-                        .padding(top = 15.dp, bottom = 5.dp)
-                ) {
-                    if (allFriend != null) {
-                        AddFriendComposable(splitViewModel , allFriend) { friends: MutableList<String> ->
-                            run {
-                                member = ((member + friends).toMutableList())
-                                selectfriend = false
-                            }
-                        }
-                    }
-
-                }
-            }
-
-        }
-    }
 
 
 Column (
 
-    verticalArrangement = Arrangement.Center,
-    modifier = Modifier.padding(15.dp)
+    verticalArrangement = Arrangement.SpaceBetween,
+    modifier = Modifier.padding(15.dp).fillMaxHeight().fillMaxWidth()
 ) {
-    TopComposable(navController = navController)
-    HeaderComposable(title = "Create Group")
-    OutlinedTextField(
-        modifier = Modifier.fillMaxWidth(),
-        value = name,
-        onValueChange = {name = it },
-        label = { Text("Name") }
-    )
-
-    OutlinedTextField(
-        modifier = Modifier
-            .height(120.dp)
-            .fillMaxWidth(),
-        value = description,
-        onValueChange = { description = it },
-        label = { Text("Description") }
-    )
-
-    Spacer(modifier = Modifier.height(5.dp))
-
-    Row(
-        Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ){
-        Text(text = "Select Friend",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = blue32
+    Column {
+        TopComposable(navController = navController)
+        HeaderComposable(title = "Create Group")
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = name,
+            onValueChange = { name = it },
+            label = { Text("Name") }
         )
-        Surface (
-            onClick = { selectfriend = true}
 
-        ){
-            Icon(painter = painterResource(id = R.drawable.plus), contentDescription = "Add Friend" ,
-                tint = Color.Black,
-            )
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth(),
+            value = description,
+            onValueChange = { description = it },
+            label = { Text("Description") }
+        )
+        FriendRequestComposable(
+            navController = navController,
+            splitViewModel = splitViewModel
+        ) { friends: Usermodel ->
+            run {
+                member = ((member + friends).toMutableSet())
+            }
         }
 
-    }
-    LazyColumn(
-        modifier = Modifier.weight(1f)
-    ) {
-        items(member.size){index ->
-            val user = splitViewModel.getUserFromId(member[index])
-            IndividualViewComposable(user?.username!!, user.first_name!!) {
-                Surface (
-                    onClick = ({
-                        run {
-                            member = (member - member[index]).toMutableList()
-                        }
-                    })
+        Spacer(modifier = Modifier.height(5.dp))
+
+        LazyColumn {
+            var allUser = member.toList()
+            items(allUser.size) { index ->
+                var user = allUser[index]
+                IndividualViewComposable(
+                    friendUserName = user.username!!,
+                    friendName = user.first_name!!
                 ) {
-                    Icon(painter = painterResource(id = R.drawable.trash), contentDescription = "Delete" , modifier = Modifier.size(25.dp) , tint = orange32 )
+                    Surface(
+                        onClick = {
+                            member = ((member - user).toMutableSet())
+                        },
+                        color = Color.Transparent
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.trash),
+                            contentDescription = "Trash",
+                            Modifier.size(20.dp)
+                        )
+                    }
                 }
-              }
+
+            }
         }
+
+
+
+
     }
 
 
     Button(onClick = {
-           coroutineScope.launch {
-               splitViewModel.addGroup(authViewModel.thisUser.value!!.uid , name , description , member)
-           }
-            navController.popBackStack()
-    } ,
+        coroutineScope.launch {
+            splitViewModel.addGroup(authViewModel.thisUser.value!!.uid, name, description, member.toList())
+        }
+        navController.popBackStack()
+    },
         modifier = Modifier
             .fillMaxWidth()
             .height(45.dp)
@@ -175,7 +142,6 @@ Column (
     }
 
 }
-
 }
 
 

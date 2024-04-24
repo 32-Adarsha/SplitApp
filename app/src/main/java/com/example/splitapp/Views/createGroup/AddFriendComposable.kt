@@ -33,7 +33,7 @@ import com.example.splitapp.Views.theme.green32
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
-fun AddFriendComposable(splitViewModel: SplitViewModel, memberChoice:List<String>,onAdd: (MutableList<String>) -> Unit) {
+fun AddFriendComposable(splitViewModel: SplitViewModel, memberChoice:List<String>?,onAdd: (MutableList<String>) -> Unit) {
     var search by remember {
         mutableStateOf("")
     }
@@ -48,7 +48,7 @@ fun AddFriendComposable(splitViewModel: SplitViewModel, memberChoice:List<String
                 onchange = { value -> search = value },
                 svgId = R.drawable.search)
             Spacer(modifier = Modifier.height(5.dp))
-            selectedFriend2(splitViewModel , memberChoice , onAdd)
+            selectedFriend2(splitViewModel , memberChoice!! , onAdd)
 
         }
 

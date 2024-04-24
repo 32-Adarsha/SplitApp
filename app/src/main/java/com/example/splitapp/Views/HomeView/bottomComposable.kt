@@ -49,22 +49,27 @@ fun BottomComposable (navController: NavController? , path:String? ){
                     .padding(horizontal = 30.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
+                Surface (
+                    onClick = {navController?.navigate("userView")},
+                    color = Color.Transparent
+                ) {
                 Icon(
                     painter = painterResource(id = R.drawable.home),
-                    contentDescription = "Home" ,
+                    contentDescription = "Home",
                     modifier = Modifier.size(40.dp),
-                    tint = white32
+                    tint = Color.White
                 )
+            }
                 Surface (
                     onClick = {navController?.navigate("allFriendView")},
-                    modifier = Modifier.background(Color.Transparent)
+                    color = Color.Transparent
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.friend),
                         contentDescription = "Friends",
                         modifier = Modifier.size(50.dp),
-                        tint = white32
+                        tint = Color.White
                     )
                 }
             }

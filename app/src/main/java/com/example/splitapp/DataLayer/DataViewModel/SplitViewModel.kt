@@ -11,11 +11,14 @@ import com.example.splitapp.DataLayer.Repository.AuthRepository
 import com.example.splitapp.DataLayer.Repository.DisplayRepository
 import com.example.splitapp.DataLayer.Repository.GroupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,6 +37,13 @@ class SplitViewModel @Inject constructor(
     val _viewGroupDetail = MutableStateFlow<Int>(0)
     val viewGroupDetail = _viewGroupDetail.asStateFlow()
     val thisUser = authRepository.thisUser
+    var allGroupRequest = displayRepository.allGroupRequest
+    var allNewFriend = displayRepository.allFriendsNew
+    val loading = authRepository.loading
+    val error = authRepository.error
+    val loading2 = authRepository.loading2
+    var error2 = authRepository.error2
+
 
 
 
@@ -44,7 +54,7 @@ class SplitViewModel @Inject constructor(
     }
 
 
-    suspend fun addGroup(ownerId:String , name:String , description:String, member:List<String>){
+    suspend fun addGroup(ownerId:String , name:String , description:String, member:List<Usermodel>?){
         viewModelScope.launch {
             groupRepository.createGroup(ownerId , member , name , description)
 
@@ -65,16 +75,10 @@ class SplitViewModel @Inject constructor(
     }
 
     fun getUserFromId(id:String):Usermodel?{
-        return friend.value[id]?:null
+        return allNewFriend.value[id]
     }
 
-    fun getGroupLog(id:String):List<GroupLog>?{
-        return allGroupLog.value[id]?:null
-    }
 
-    fun getGroupOwed(id:String):Map<String , Float>? {
-        return allOwed.value[id]
-    }
 
     fun getGroupFromID(id:String):GroupModel? {
         return allGroup.value[id]?:null
@@ -101,12 +105,8 @@ class SplitViewModel @Inject constructor(
         return totalOwed
     }
 
-    fun getAllFriend():List<String>? {
-        var memberList:MutableList<String> = mutableListOf()
-        for((key , value ) in friend.value){
-            memberList.add(key)
-        }
-        return  memberList.toList()
+    fun getFriendFromId(id:String): Usermodel? {
+        return allNewFriend.value[id]
     }
 
 
@@ -114,6 +114,21 @@ class SplitViewModel @Inject constructor(
         return viewModelScope.async {
             displayRepository.fetchTheUserFromEmail(email)
         }.await()
+    }
+
+    suspend fun requestGroupRequest(thisUser:String){
+        displayRepository.getGroupRequest(thisUser)
+    }
+
+    suspend fun acceptRequest(groupId: String) {
+        withContext(Dispatchers.IO) {
+            groupRepository.acceptGroupRequest(thisUser.value!!.uid, groupId)
+        }
+        displayRepository.deleteGroupRequest(thisUser.value!!.uid, groupId)
+    }
+
+     fun removeRequest(groupId:String){
+        displayRepository.deleteGroupRequest(thisUser.value!!.uid,groupId )
     }
 
 

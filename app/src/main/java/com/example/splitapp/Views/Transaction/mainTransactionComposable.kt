@@ -1,6 +1,7 @@
 package com.example.splitapp.Views.Transaction
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -90,6 +91,7 @@ fun mainTransactionComposable(navController: NavController,splitViewModel: Split
     var total by remember {
         mutableStateOf("")
     }
+
 
     var memberChoice = splitViewModel.getGroupMember(id)?.toMutableList()
     memberChoice?.remove(owner.value!!.uid)
@@ -230,28 +232,21 @@ fun mainTransactionComposable(navController: NavController,splitViewModel: Split
                                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                                 )
                                 Spacer(modifier = Modifier.width(5.dp))
-                                Surface(
-                                    onClick = ({
-                                        run {
-                                            var tempMap = member.toMutableMap()
-                                            tempMap.remove(key)
-                                            member = tempMap.toMap()
-                                        }
-                                    }),
-                                    border = BorderStroke(1.dp, Color.Black),
-                                    shape = RoundedCornerShape(5.dp),
 
-                                    ) {
+                                Button(onClick = {
+                                    run {
+                                        var tempMap = member.toMutableMap()
+                                        tempMap.remove(key)
+                                        member = tempMap.toMap()
+                                    }
+                                 } , shape = RoundedCornerShape(5.dp)) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.trash),
                                         contentDescription = "Delete",
                                         modifier = Modifier
                                             .size(25.dp)
-                                            .background(
-                                                orange32
-                                            ),
+                                            ,
                                         tint = Color.White,
-
                                         )
                                 }
                             }
@@ -297,14 +292,14 @@ fun mainTransactionComposable(navController: NavController,splitViewModel: Split
                             .padding(top = 15.dp, bottom = 5.dp)
                     ) {
                         if (memberChoice != null) {
-                            AddFriendComposable(splitViewModel , memberChoice) { friends: MutableList<String> ->
+                            AddFriendComposable(splitViewModel , memberChoice.toList()) { friends: MutableList<String> ->
                                 run {
                                     var tempMap = member.toMutableMap()
                                     for(indivi in friends){
                                         tempMap[indivi] = 0f
                                     }
                                     member = tempMap.toMap()
-                    //
+
                                     isSlectingFriend = !isSlectingFriend
                                 }
                             }

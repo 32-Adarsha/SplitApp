@@ -53,8 +53,8 @@ fun GroupComposable(
         Text(
             text = "Groups,",
             modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center,
-            fontFamily = FontFamily(Font(R.font.cvfont)),
+            textAlign = TextAlign.Start,
+            fontFamily = FontFamily(Font(R.font.headingfont)),
             fontWeight = FontWeight.SemiBold,
             fontSize = 30.sp,
             color = orange32
@@ -71,9 +71,11 @@ fun GroupComposable(
                         },
                         modifier = Modifier.padding(top = 5.dp , bottom = 5.dp)
                     ) {
-                        val userModel = splitViewModel.getUserFromId(group.owner!!)
-                        var owed = splitViewModel.getTotalOwedInGroup(group.id!!)
-                    OutlinedCardExample( group.name!! , userModel?.username!!,owed , 40 )
+                    var userforthis = group.owner?.let { splitViewModel.getFriendFromId(it) }
+                        var amountOwed = group.id?.let { splitViewModel.getTotalOwedInGroup(it) }
+                        if (amountOwed != null) {
+                            OutlinedCardExample( group.name!! , userforthis?.username!!,amountOwed , 40 )
+                        }
                     }
 
                 }

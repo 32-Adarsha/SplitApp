@@ -51,40 +51,51 @@ import com.example.splitapp.Views.theme.white33
 
 @Composable
 fun MoneyViewer(totalOwed:Float) {
+    var owed = 0f
+    var c = Color.Gray
+
+    if (totalOwed > 0f){
+        owed = totalOwed
+        c = green32
+    } else if (totalOwed == 0f) {
+        owed = totalOwed
+    } else {
+        owed = totalOwed * -1
+        c = orange32
+    }
+
 
     Column (
-        modifier = Modifier.padding(top = 16.dp , bottom = 16.dp)
+        modifier = Modifier.padding(bottom = 16.dp)
     ){
 
-        Text(
-            text = "Total Owed,",
-            modifier = Modifier
-                .padding(start = 20.dp, end = 16.dp)
-                .fillMaxWidth(),
 
-            textAlign = TextAlign.Center,
-            fontFamily = FontFamily(Font(R.font.cvfont)),
-            fontSize = 30.sp,
-            color = orange32,
-            fontWeight = FontWeight.SemiBold
-        )
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
+            Text(
+                text = "Owed",
+                modifier = Modifier
+                    .padding(start = 20.dp, end = 16.dp),
+
+                textAlign = TextAlign.Center,
+                fontFamily = FontFamily(Font(R.font.headingfont)),
+                fontSize = 70.sp,
+
+                )
 
                 Text(
-                    text = "$ $totalOwed",
+                    text = "$ $owed",
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp),
+                        .padding(start = 15.dp, end = 16.dp),
 
                     textAlign = TextAlign.Center,
                     fontFamily = FontFamily(Font(R.font.headingfont)),
-                    fontSize = 60.sp,
-                    color = green32,
+                    fontSize = 70.sp,
+                    color = c,
                 )
 
         }

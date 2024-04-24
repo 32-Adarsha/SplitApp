@@ -1,5 +1,6 @@
 package com.example.splitapp.Views.login
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -16,7 +17,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -25,6 +28,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,17 +42,23 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.example.splitapp.DataLayer.DataViewModel.AuthViewModel
 import com.example.splitapp.DataLayer.DataViewModel.DataViewModel
+import com.example.splitapp.DataLayer.DataViewModel.SplitViewModel
 import com.example.splitapp.R
 import com.example.splitapp.Views.theme.green32
 import com.example.splitapp.Views.theme.orange32
+import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun LoginComposable(navController: NavController? , authViewModel: AuthViewModel ,testModle:DataViewModel) {
-
+fun LoginComposable(navController: NavController?, authViewModel: AuthViewModel, testModle:DataViewModel, splitViewModel: SplitViewModel) {
+    var corontine = rememberCoroutineScope()
+    var error = splitViewModel.error.collectAsState().value
     val thisUser = authViewModel.thisUser.collectAsState()
+    var loading = splitViewModel.loading.collectAsState().value
     var email by remember {
         mutableStateOf("")
     }
@@ -56,17 +66,22 @@ fun LoginComposable(navController: NavController? , authViewModel: AuthViewModel
         mutableStateOf("")
     }
 
-    var error  by remember {
-        mutableStateOf(false)
-    }
 
     var errorMessage by remember {
         mutableStateOf("")
     }
 
     if (thisUser.value != null){
+        corontine.launch {splitViewModel.requestGroupRequest(thisUser.value!!.uid)  }
         navController?.navigate("overView")
     }
+
+    if(loading){
+        Dialog(onDismissRequest = { /*TODO*/ }) {
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+        }
+    }
+
 
 
     Column(
@@ -104,7 +119,7 @@ fun LoginComposable(navController: NavController? , authViewModel: AuthViewModel
                 value = email,
                 onValueChange = { newText ->
                     email = newText
-                    error = false
+
                 },
                 label = {
                     Text(text = "Username")
@@ -118,7 +133,7 @@ fun LoginComposable(navController: NavController? , authViewModel: AuthViewModel
                 value = password,
                 onValueChange = { newText ->
                     password = newText
-                    error = false
+
                 },
                 visualTransformation =  PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -129,12 +144,13 @@ fun LoginComposable(navController: NavController? , authViewModel: AuthViewModel
                 shape = RoundedCornerShape(percent = 20),
             )
             Spacer(modifier = Modifier.height(10.dp))
-            if (error){
-                Text(text = errorMessage , color = orange32)
+            if (error != null){
+                Text(text = error , color = orange32)
             }
             Spacer(modifier = Modifier.height(10.dp))
             Button(
                 onClick = {
+
                     authViewModel.signin(email, password)
                 },
             ) {

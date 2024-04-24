@@ -22,11 +22,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.splitapp.R
 import com.example.splitapp.Views.theme.blue32
+import com.example.splitapp.Views.theme.orange32
 import com.example.splitapp.Views.theme.white33
 
 
@@ -36,18 +41,21 @@ fun IndividualViewComposable(friendUserName: String , friendName:String, side: @
         mutableStateOf(Color.Gray)
     }
     Surface(
-        modifier = Modifier.padding(3.dp)
+        modifier = Modifier.padding(3.dp),
+        color = Color.Transparent,
+        shape = RoundedCornerShape(5.dp)
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .padding(vertical = 5.dp)
+                .padding(vertical = 5.dp , horizontal = 5.dp)
                 .fillMaxWidth()
-                .height(50.dp),
+
         ) {
             Row (
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ){
                 Surface(
                     border = BorderStroke(1.dp, Color.Black),
@@ -62,21 +70,26 @@ fun IndividualViewComposable(friendUserName: String , friendName:String, side: @
                     modifier = Modifier.fillMaxHeight(),
                     verticalArrangement = Arrangement.Center
                 ) {
+                    Text(
+                        text = "$friendUserName",
+                        modifier = Modifier,
+                        textAlign = TextAlign.Start,
+                        fontFamily = FontFamily(Font(R.font.headingfont)),
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 30.sp,
+                        color = orange32
 
-                        Text(
-                            text = friendUserName,
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = blue32
-                        )
+                    )
+                    Text(
+                        text = friendName,
+                        modifier = Modifier,
+                        textAlign = TextAlign.Start,
+                        fontFamily = FontFamily(Font(R.font.cvfont)),
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 20.sp,
+                        color = orange32
 
-                        Text(
-                            text = friendName,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Normal,
-                            color = blue32,
-                            fontStyle = FontStyle.Italic
-                        )
+                    )
                 }
 
 

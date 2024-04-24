@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Shapes
@@ -41,12 +42,15 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.example.splitapp.DataLayer.DataModel.Usermodel
 import com.example.splitapp.DataLayer.DataViewModel.AllFriendViewModel
 import com.example.splitapp.DataLayer.DataViewModel.AuthViewModel
 import com.example.splitapp.DataLayer.DataViewModel.DataViewModel
+import com.example.splitapp.DataLayer.DataViewModel.SplitViewModel
 import com.example.splitapp.R
+import com.example.splitapp.Views.theme.orange32
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
@@ -55,9 +59,11 @@ import java.util.UUID
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun SignUpCompose(navController: NavController? , authViewModel: AuthViewModel? , dataViewModel: DataViewModel?) {
+fun SignUpCompose(navController: NavController? , authViewModel: AuthViewModel? , dataViewModel: DataViewModel? , splitViewModel: SplitViewModel) {
     val coroutineScope = rememberCoroutineScope()
     val thisUser by authViewModel?.thisUser!!.collectAsState()
+    var loading = splitViewModel.loading2.collectAsState().value
+    var error = splitViewModel.error2.collectAsState().value
     var email by remember {
          mutableStateOf("")
     }
@@ -82,6 +88,12 @@ fun SignUpCompose(navController: NavController? , authViewModel: AuthViewModel? 
             var userObj = Usermodel(thisUser!!.uid,email,null,null ,username, first_name, last_name)
             dataViewModel?.addSelf(thisUser!!.uid, userObj)
             navController?.navigate("login")
+        }
+    }
+
+    if(loading){
+        Dialog(onDismissRequest = { /*TODO*/ }) {
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
         }
     }
 
@@ -186,6 +198,9 @@ fun SignUpCompose(navController: NavController? , authViewModel: AuthViewModel? 
                 placeholder = { Text(text = "Type password here") },
                 shape = RoundedCornerShape(percent = 20),
             )
+            if (error != null){
+                Text(text = error , color = orange32)
+            }
             Button(onClick = {
                     authViewModel?.signup(email, password)
 
@@ -218,8 +233,3 @@ fun SignUpCompose(navController: NavController? , authViewModel: AuthViewModel? 
     }
 }
 
-@Preview
-@Composable
-fun PreviewSignUPCompose() {
-    SignUpCompose(null ,null  , null)
-}

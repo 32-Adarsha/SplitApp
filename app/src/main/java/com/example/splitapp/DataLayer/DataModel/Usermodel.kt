@@ -1,7 +1,5 @@
 package com.example.splitapp.DataLayer.DataModel
 
-import java.util.UUID
-
 
 data class FriendId(
     val id:String?,
@@ -15,8 +13,8 @@ data class GroupId(
 data class Usermodel (
     var id: String?,
     var email: String?,
-    var Friends: List<String>?,
-    var friendRequest : List<String>?,
+    var groupInvitation : Map<String , Boolean>?,
+    var groups:Map<String , Map<String, Float>>?,
     var username: String?,
     var first_name: String?,
     var last_name: String?

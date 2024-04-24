@@ -1,6 +1,7 @@
 package com.example.splitapp
 
 
+import FriendRequestComposable
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -59,14 +60,16 @@ class MainActivity : ComponentActivity() {
                             SignUpCompose(
                                 navController = navController,
                                 authViewModel,
-                                dataViewModel
+                                dataViewModel,
+                                viewModel
                             )
                         }
                         composable("login") {
                             LoginComposable(
                                 navController = navController,
                                 authViewModel,
-                                dataViewModel
+                                dataViewModel,
+                                viewModel
                             )
                         }
                         composable("forgetPassword") {
@@ -80,6 +83,9 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable("friend") {
                             friendViewComposable(navController , viewModel)
+                        }
+                        composable("friendRequest") {
+
                         }
                     }
 

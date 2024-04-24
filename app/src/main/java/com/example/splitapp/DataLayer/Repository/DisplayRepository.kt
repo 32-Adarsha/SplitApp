@@ -1,6 +1,6 @@
 package com.example.splitapp.DataLayer.Repository
 
-import android.provider.ContactsContract
+import android.annotation.SuppressLint
 import android.util.Log
 import com.example.splitapp.DataLayer.DataModel.GroupLog
 import com.example.splitapp.DataLayer.DataModel.GroupModel
@@ -10,9 +10,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,6 +31,11 @@ class DisplayRepository @Inject constructor(
     val allOwed = _allOwed.asStateFlow()
     private val _allLog = MutableStateFlow<Map<String , List<GroupLog>?>>(emptyMap())
     val allLog = _allLog.asStateFlow()
+    private val _allGroupRequest = MutableStateFlow<Map<String , GroupModel>>(emptyMap())
+    val allGroupRequest = _allGroupRequest.asStateFlow()
+    private val _allFriendsNew = MutableStateFlow<Map<String , Usermodel?>>(emptyMap())
+    val allFriendsNew = _allFriendsNew.asStateFlow()
+
 
     override suspend fun fetchAllFirend(id:String){
         val usersRef = database.reference.child("Users/$id/Friends")
@@ -65,7 +70,7 @@ class DisplayRepository @Inject constructor(
     }
 
     suspend fun fetchAllGroup(){
-        val usersRef = database.reference.child("Users/${authRepository.thisUser.value!!.uid}/groups")
+        val usersRef = database.reference.child("Users/${authRepository.thisUser.value!!.uid}/Groups")
         usersRef.addValueEventListener(object :ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
 
@@ -74,6 +79,24 @@ class DisplayRepository @Inject constructor(
 
                     val groupId = groupSnapshot.key ?: continue
                     var oMap =  groupSnapshot.value as? Map<String , Float>?:continue
+
+                    for ((key , value) in oMap){
+                        var indRef = database.reference.child("Users/$key")
+                        indRef.addValueEventListener(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                var indUserModel = snapshot.getValue(Usermodel::class.java)
+                                var newALlFriend = _allFriendsNew.value.toMutableMap()
+                                newALlFriend[key] = indUserModel
+                                _allFriendsNew.value = newALlFriend.toMap()
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                TODO("Not yet implemented")
+                            }
+
+                        })
+                    }
+
 
                     var currentOlist = _allOwed.value.toMutableMap()
                     currentOlist[groupId] = oMap
@@ -136,6 +159,54 @@ class DisplayRepository @Inject constructor(
             Log.e("Problem" , "Problem")
             null
         }
+    }
+
+
+
+
+    suspend fun getGroupRequest(thisUser: String){
+        var groupRef = database.reference.child("Users/$thisUser").child("groupInvitation")
+
+        groupRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (data in snapshot.children){
+                    val groupId = data.key ?: continue
+                    getGroup(groupId)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+    }
+
+    @SuppressLint("SuspiciousIndentation")
+    fun getGroup(groupId:String){
+      var gRef = database.reference.child("Groups").child("$groupId")
+        gRef.addValueEventListener(object :ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var groupModel = snapshot.getValue(GroupModel::class.java)
+                var tempHolder = _allGroupRequest.value.toMutableMap()
+                if (groupModel != null) {
+                    tempHolder[groupId] = groupModel
+                }
+                _allGroupRequest.value = tempHolder.toMap()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
+    fun deleteGroupRequest(userId:String , groupId: String){
+       val temp = _allGroupRequest.value.toMutableMap()
+        temp.remove(groupId)
+        _allGroupRequest.value = temp.toMap()
     }
 
 
