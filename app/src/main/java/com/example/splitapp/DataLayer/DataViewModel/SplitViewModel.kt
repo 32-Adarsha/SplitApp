@@ -31,7 +31,7 @@ class SplitViewModel @Inject constructor(
     val allGroup= displayRepository.allGroup
     val allOwed = displayRepository.allOwed
     val allGroupLog = displayRepository.allLog
-    val friend  = displayRepository.allFriends
+
     val _count = MutableStateFlow<Int>(0)
     val count: StateFlow<Int> = _count.asStateFlow()
     val _viewGroupDetail = MutableStateFlow<Int>(0)

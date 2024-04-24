@@ -59,7 +59,7 @@ fun HomeComposable(navController: NavController? , splitViewModel: SplitViewMode
 
             )
             Divider(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp))
-            MoneyViewer(splitViewModel.getOverallOwed())
+            MoneyViewer(splitViewModel)
             GroupComposable(navController = navController ,splitViewModel)
 
         }

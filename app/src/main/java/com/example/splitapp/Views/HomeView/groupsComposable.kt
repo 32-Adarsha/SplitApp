@@ -71,11 +71,16 @@ fun GroupComposable(
                         },
                         modifier = Modifier.padding(top = 5.dp , bottom = 5.dp)
                     ) {
-                    var userforthis = group.owner?.let { splitViewModel.getFriendFromId(it) }
-                        var amountOwed = group.id?.let { splitViewModel.getTotalOwedInGroup(it) }
-                        if (amountOwed != null) {
-                            OutlinedCardExample( group.name!! , userforthis?.username!!,amountOwed , 40 )
+                        var owner = group.owner?.let { splitViewModel.getFriendFromId(it) }
+                        group?.id?.let {
+                            if (owner != null) {
+                                owner.username?.let { it1 ->
+                                    OutlinedCardExample2(splitViewModel,
+                                        it,group?.name!! , it1, 40 )
+                                }
+                            }
                         }
+
                     }
 
                 }
@@ -129,8 +134,75 @@ fun OutlinedCardExample( name:String , owner:String ,owesamount:Float , moneyFon
             }
             Text(
                 text = "$$owes",
-                modifier = Modifier.fillMaxWidth()
-                    .padding( start = 16.dp , end = 16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp),
+
+                textAlign = TextAlign.End,
+                fontFamily = FontFamily(Font(R.font.dmfont)),
+                fontSize = moneyFontSize.sp,
+                color = color,
+
+
+                )
+
+        }
+
+    }
+}
+@Composable
+fun OutlinedCardExample2( splitViewModel: SplitViewModel , groupId:String,name: String,owner:String, moneyFontSize:Int) {
+
+    var owes = 0f
+    splitViewModel.allOwed.collectAsState().value[groupId]?.forEach{ (_ , amount) ->
+        owes += amount
+    }
+
+    var color: Color = if (owes == 0f) {
+        Color.Gray
+    } else if (owes < 0f) {
+        owes = -1 * owes
+        orange32
+    } else {
+        green32
+    }
+    OutlinedCard(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+        ),
+        border = BorderStroke(1.dp, Color.Black),
+
+        ) {
+        Row (
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column (
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = name,
+                    modifier = Modifier
+                        .padding(top = 16.dp , start = 16.dp , end = 16.dp),
+                    textAlign = TextAlign.Center,
+                    fontFamily = FontFamily(Font(R.font.headingfont)),
+                    fontSize = 40.sp,
+
+                    )
+                Text(
+                    text = "Owner -> ${owner.capitalize(Locale.getDefault())}",
+                    modifier = Modifier.padding( start = 16.dp , bottom = 16.dp , end = 16.dp),
+                    textAlign = TextAlign.Center,
+                    fontFamily = FontFamily(Font(R.font.cvfont)),
+                    fontSize = 23.sp
+                )
+
+            }
+            Text(
+                text = "$$owes",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp),
 
                 textAlign = TextAlign.End,
                 fontFamily = FontFamily(Font(R.font.dmfont)),
@@ -145,8 +217,3 @@ fun OutlinedCardExample( name:String , owner:String ,owesamount:Float , moneyFon
     }
 }
 
-//@Preview
-//@Composable
-//fun previewOutline(){
-//    GroupCard(null)
-//}

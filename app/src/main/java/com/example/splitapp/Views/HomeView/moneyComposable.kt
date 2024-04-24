@@ -22,6 +22,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -42,6 +47,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.splitapp.DataLayer.DataViewModel.SplitViewModel
 import com.example.splitapp.R
 import com.example.splitapp.Views.theme.green32
 import com.example.splitapp.Views.theme.orange32
@@ -50,8 +56,16 @@ import com.example.splitapp.Views.theme.white33
 
 
 @Composable
-fun MoneyViewer(totalOwed:Float) {
+fun MoneyViewer(splitViewModel: SplitViewModel) {
+    var totalOwed = 0f
+    splitViewModel.allOwed.collectAsState().value.forEach { (id, nextmap) ->
+
+        nextmap.forEach { (id,value) ->
+            totalOwed += value
+        }
+    }
     var owed = 0f
+
     var c = Color.Gray
 
     if (totalOwed > 0f){
