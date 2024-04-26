@@ -121,10 +121,11 @@ class SplitViewModel @Inject constructor(
     }
 
     suspend fun acceptRequest(groupId: String) {
+        displayRepository.deleteGroupRequest(thisUser.value!!.uid, groupId)
         withContext(Dispatchers.IO) {
             groupRepository.acceptGroupRequest(thisUser.value!!.uid, groupId)
         }
-        displayRepository.deleteGroupRequest(thisUser.value!!.uid, groupId)
+
     }
 
      fun removeRequest(groupId:String){
